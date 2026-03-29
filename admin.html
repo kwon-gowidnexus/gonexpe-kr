@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRA Admin</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            color: #1a1a1a;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* ── Login ── */
+        .login-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: #fff;
+        }
+        .login-box {
+            width: 360px;
+            padding: 40px;
+        }
+        .login-box h1 {
+            font-family: 'Times New Roman', serif;
+            font-size: 18px;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .login-box .sub {
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 32px;
+        }
+        .login-box input {
+            display: block;
+            width: 100%;
+            padding: 10px 0;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 16px;
+            background: transparent;
+        }
+        .login-box input:focus { border-bottom-color: #000; }
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            color: #fff;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .login-box button:hover { background: #333; }
+        .login-error {
+            color: #c0392b;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 12px;
+            display: none;
+        }
+
+        /* ── Dashboard Shell ── */
+        .dashboard { display: none; }
+        .top-bar {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .top-bar .brand {
+            font-family: 'Times New Roman', serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+            color: #888;
+        }
+        .top-bar .brand span { color: #000; font-weight: bold; }
+        .top-bar .actions { display: flex; gap: 12px; align-items: center; }
+        .top-bar .actions a {
+            color: #666;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .top-bar .actions a:hover { color: #000; }
+        .btn-logout {
+            background: none;
+            border: 1px solid #ddd;
+            padding: 4px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            color: #666;
+        }
+        .btn-logout:hover { border-color: #999; color: #000; }
+
+        /* ── Tabs ── */
+        .tab-nav {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 0 24px;
+            display: flex;
+            gap: 0;
+        }
+        .tab-nav button {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            font-size: 13px;
+            cursor: pointer;
+            color: #888;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .tab-nav button:hover { color: #333; }
+        .tab-nav button.active {
+            color: #000;
+            border-bottom-color: #000;
+            font-weight: 600;
+        }
+        .tab-content {
+            max-width: 1100px;
+            margin: 24px auto;
+            padding: 0 24px;
+        }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* ── Cards ── */
+        .card-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            padding: 20px;
+        }
+        .card .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        .card .value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .card .note {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        /* ── Chart ── */
+        .chart-wrap {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        .chart-wrap h3 {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .chart-wrap canvas { max-height: 240px; }
+
+        /* ── Tables ── */
+        .data-table {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 24px;
+            overflow-x: auto;
+        }
+        .data-table h3 {
+            font-size: 13px;
+            font-weight: 600;
+            padding: 16px 20px 12px;
+        }
+        .data-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th, .data-table td {
+            text-align: left;
+            padding: 10px 20px;
+            border-top: 1px solid #f0f0f0;
+            font-size: 13px;
+        }
+        .data-table th {
+            font-weight: 600;
+            color: #888;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── Articles ── */
+        .article-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .article-toolbar h2 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .btn-primary {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .btn-primary:hover { background: #333; }
+        .btn-secondary {
+            background: #fff;
+            color: #333;
+            border: 1px solid #ddd;
+            padding: 8px 16px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .btn-secondary:hover { border-color: #999; }
+        .btn-danger {
+            background: #fff;
+            color: #c0392b;
+            border: 1px solid #e0e0e0;
+            padding: 4px 12px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .btn-danger:hover { background: #fdf0ef; border-color: #c0392b; }
+        .btn-edit {
+            background: #fff;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            padding: 4px 12px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .btn-edit:hover { background: #f5f5f5; }
+
+        .article-list-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .article-list-row:last-child { border-bottom: none; }
+        .article-list-row .info { flex: 1; }
+        .article-list-row .info .title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .article-list-row .info .meta {
+            font-size: 12px;
+            color: #888;
+            margin-top: 2px;
+        }
+        .article-list-row .btns { display: flex; gap: 8px; }
+
+        /* ── Editor ── */
+        .editor-panel { display: none; }
+        .editor-panel.active { display: block; }
+        .editor-panel h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .form-group { margin-bottom: 12px; }
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #888;
+            margin-bottom: 4px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            outline: none;
+            font-family: inherit;
+        }
+        .form-group input:focus, .form-group textarea:focus { border-color: #000; }
+        .form-group textarea {
+            min-height: 400px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            resize: vertical;
+        }
+        .editor-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        /* ── Preview ── */
+        .preview-panel {
+            display: none;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            padding: 40px;
+            margin-top: 16px;
+            max-width: 640px;
+        }
+        .preview-panel.active { display: block; }
+        .preview-panel h1 { font-family: 'Times New Roman', serif; font-size: 20px; margin-bottom: 4px; }
+        .preview-panel .preview-meta { color: #666; font-size: 13px; margin-bottom: 16px; }
+        .preview-panel h2 {
+            font-family: 'Times New Roman', serif;
+            font-size: 15px;
+            margin: 24px 0 8px;
+        }
+        .preview-panel h2::before { content: "["; }
+        .preview-panel h2::after { content: "]"; }
+        .preview-panel p { font-family: 'Times New Roman', serif; font-size: 15px; line-height: 1.8; margin: 8px 0; }
+
+        /* ── Settings ── */
+        .settings-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            padding: 24px;
+            max-width: 500px;
+            margin-bottom: 20px;
+        }
+        .settings-card h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .settings-card .hint {
+            font-size: 12px;
+            color: #888;
+            margin-top: 8px;
+            line-height: 1.6;
+        }
+        .pat-status {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 11px;
+            border-radius: 2px;
+            margin-left: 8px;
+        }
+        .pat-status.ok { background: #e8f5e9; color: #2e7d32; }
+        .pat-status.missing { background: #fff3e0; color: #e65100; }
+
+        /* ── Loading / Empty ── */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+        .empty-state p { margin: 8px 0; }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #333;
+            color: #fff;
+            padding: 12px 20px;
+            font-size: 13px;
+            z-index: 9999;
+            display: none;
+            max-width: 400px;
+        }
+        .toast.error { background: #c0392b; }
+        .toast.success { background: #27ae60; }
+
+        @media (max-width: 640px) {
+            .form-row { grid-template-columns: 1fr 1fr; }
+            .card-row { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ════════════════ LOGIN ════════════════ -->
+<div class="login-wrap" id="loginScreen">
+    <div class="login-box">
+        <h1>THE RAZOR ACADEMY</h1>
+        <p class="sub">Admin Console</p>
+        <input type="email" id="loginEmail" placeholder="Email" autocomplete="email">
+        <input type="password" id="loginPw" placeholder="Password" autocomplete="current-password">
+        <button onclick="doLogin()">Sign In</button>
+        <p class="login-error" id="loginError">Invalid credentials</p>
+    </div>
+</div>
+
+<!-- ════════════════ DASHBOARD ════════════════ -->
+<div class="dashboard" id="dashboard">
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="brand">THE RAZOR ACADEMY <span>Admin</span></div>
+        <div class="actions">
+            <a href="/" target="_blank">View Site</a>
+            <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-nav">
+        <button class="active" onclick="switchTab('overview')">Overview</button>
+        <button onclick="switchTab('articles')">Articles</button>
+        <button onclick="switchTab('settings')">Settings</button>
+    </div>
+
+    <!-- ── Overview Tab ── -->
+    <div class="tab-content">
+        <div class="tab-panel active" id="tab-overview">
+            <div class="card-row">
+                <div class="card">
+                    <div class="label">Views (14d)</div>
+                    <div class="value" id="stat-views">—</div>
+                    <div class="note">Total page views</div>
+                </div>
+                <div class="card">
+                    <div class="label">Unique Visitors (14d)</div>
+                    <div class="value" id="stat-uniques">—</div>
+                    <div class="note">Unique visitors</div>
+                </div>
+                <div class="card">
+                    <div class="label">Top Referrer</div>
+                    <div class="value" id="stat-top-ref" style="font-size:16px;">—</div>
+                    <div class="note">Most traffic source</div>
+                </div>
+                <div class="card">
+                    <div class="label">Articles</div>
+                    <div class="value" id="stat-articles">—</div>
+                    <div class="note">Published letters</div>
+                </div>
+            </div>
+
+            <div class="chart-wrap">
+                <h3>Daily Views (14 days)</h3>
+                <canvas id="viewsChart"></canvas>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                <div class="data-table">
+                    <h3>Top Referrers</h3>
+                    <table>
+                        <thead><tr><th>Source</th><th>Count</th><th>Uniques</th></tr></thead>
+                        <tbody id="referrers-body"><tr><td colspan="3" style="color:#888">Loading...</td></tr></tbody>
+                    </table>
+                </div>
+                <div class="data-table">
+                    <h3>Popular Pages</h3>
+                    <table>
+                        <thead><tr><th>Path</th><th>Views</th><th>Uniques</th></tr></thead>
+                        <tbody id="paths-body"><tr><td colspan="3" style="color:#888">Loading...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Articles Tab ── -->
+        <div class="tab-panel" id="tab-articles">
+            <!-- List View -->
+            <div id="articleListView">
+                <div class="article-toolbar">
+                    <h2>Articles</h2>
+                    <button class="btn-primary" onclick="openEditor(null)">+ New Article</button>
+                </div>
+                <div class="data-table">
+                    <div id="articleList"><div class="loading">Loading articles...</div></div>
+                </div>
+            </div>
+
+            <!-- Editor View -->
+            <div class="editor-panel" id="editorPanel">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+                    <h2 id="editorTitle">New Article</h2>
+                    <button class="btn-secondary" onclick="closeEditor()">Back to list</button>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Number</label>
+                        <input type="number" id="ed-number" placeholder="2">
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="ed-title" placeholder="레터 제목">
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="ed-date">
+                    </div>
+                    <div class="form-group">
+                        <label>Week</label>
+                        <input type="text" id="ed-week" placeholder="W15">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Body (Markdown)</label>
+                    <textarea id="ed-body" placeholder="## 시장&#10;본문...&#10;&#10;## 딜/투자&#10;본문...&#10;&#10;## 수련&#10;본문...&#10;&#10;## 한 문장&#10;본문..."></textarea>
+                </div>
+                <div class="editor-actions">
+                    <button class="btn-primary" onclick="publishArticle()" id="btn-publish">Publish</button>
+                    <button class="btn-secondary" onclick="togglePreview()">Preview</button>
+                </div>
+                <div class="preview-panel" id="previewPanel">
+                    <div id="previewContent"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Settings Tab ── -->
+        <div class="tab-panel" id="tab-settings">
+            <div class="settings-card">
+                <h3>GitHub Personal Access Token <span class="pat-status missing" id="patStatus">Not Set</span></h3>
+                <div class="form-group">
+                    <input type="password" id="pat-input" placeholder="ghp_xxxxxxxxxxxx">
+                </div>
+                <button class="btn-primary" onclick="savePat()" style="margin-top:8px;">Save Token</button>
+                <p class="hint">
+                    Required for publishing articles and viewing analytics.<br>
+                    Token is stored in this browser session only (cleared on close).<br>
+                    Needs <code>repo</code> scope. Create at github.com/settings/tokens.
+                </p>
+            </div>
+            <div class="settings-card">
+                <h3>Site Info</h3>
+                <p style="font-size:13px; color:#555;">
+                    Domain: <strong>gonexpe.kr</strong><br>
+                    Repository: <strong>kwon-gowidnexus/gonexpe-kr</strong><br>
+                    Hosting: GitHub Pages<br>
+                    SSL: Let's Encrypt (auto)
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════
+// CONFIG
+// ════════════════════════════════════════════
+const AUTH_EMAIL = 'kwon@gonexpe.kr';
+const AUTH_HASH = '5d614e8a8fbc2d438a5bdcd8bb278011c112afa8186f3ac8cd7682e1334227fb';
+const REPO_OWNER = 'kwon-gowidnexus';
+const REPO_NAME = 'gonexpe-kr';
+const SITE_TITLE = 'THE RAZOR ACADEMY';
+
+// ════════════════════════════════════════════
+// AUTH
+// ════════════════════════════════════════════
+async function sha256(text) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function doLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pw = document.getElementById('loginPw').value;
+    const hash = await sha256(pw);
+    if (email === AUTH_EMAIL && hash === AUTH_HASH) {
+        sessionStorage.setItem('tra_auth', '1');
+        showDashboard();
+    } else {
+        document.getElementById('loginError').style.display = 'block';
+    }
+}
+
+function doLogout() {
+    sessionStorage.removeItem('tra_auth');
+    sessionStorage.removeItem('tra_pat');
+    location.reload();
+}
+
+function showDashboard() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    loadOverview();
+    loadArticles();
+    checkPat();
+}
+
+// Auto-login check
+document.addEventListener('DOMContentLoaded', function() {
+    if (sessionStorage.getItem('tra_auth') === '1') showDashboard();
+    document.getElementById('loginPw').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') doLogin();
+    });
+});
+
+// ════════════════════════════════════════════
+// TABS
+// ════════════════════════════════════════════
+function switchTab(name) {
+    document.querySelectorAll('.tab-nav button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    document.querySelectorAll('.tab-nav button').forEach(b => {
+        if (b.textContent.toLowerCase().startsWith(name.slice(0,3))) b.classList.add('active');
+    });
+}
+
+// ════════════════════════════════════════════
+// GITHUB API
+// ════════════════════════════════════════════
+function getPat() { return sessionStorage.getItem('tra_pat') || ''; }
+
+async function ghApi(path, opts = {}) {
+    const pat = getPat();
+    if (!pat) { toast('GitHub PAT not set. Go to Settings.', 'error'); return null; }
+    const url = 'https://api.github.com' + path;
+    const res = await fetch(url, {
+        headers: {
+            'Authorization': 'token ' + pat,
+            'Accept': 'application/vnd.github.v3+json',
+            ...(opts.headers || {})
+        },
+        method: opts.method || 'GET',
+        body: opts.body ? JSON.stringify(opts.body) : undefined
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || res.statusText);
+    }
+    return res.json();
+}
+
+// ════════════════════════════════════════════
+// OVERVIEW / ANALYTICS
+// ════════════════════════════════════════════
+let viewsChart = null;
+
+async function loadOverview() {
+    if (!getPat()) {
+        document.getElementById('stat-views').textContent = '—';
+        document.getElementById('stat-uniques').textContent = '—';
+        document.getElementById('stat-top-ref').textContent = 'Set PAT';
+        return;
+    }
+
+    try {
+        const [views, referrers, paths] = await Promise.all([
+            ghApi('/repos/' + REPO_OWNER + '/' + REPO_NAME + '/traffic/views'),
+            ghApi('/repos/' + REPO_OWNER + '/' + REPO_NAME + '/traffic/popular/referrers'),
+            ghApi('/repos/' + REPO_OWNER + '/' + REPO_NAME + '/traffic/popular/paths')
+        ]);
+
+        // Summary cards
+        document.getElementById('stat-views').textContent = (views.count || 0).toLocaleString();
+        document.getElementById('stat-uniques').textContent = (views.uniques || 0).toLocaleString();
+        document.getElementById('stat-top-ref').textContent = referrers && referrers[0] ? referrers[0].referrer : 'Direct';
+
+        // Chart
+        const labels = (views.views || []).map(v => {
+            const d = new Date(v.timestamp);
+            return (d.getMonth()+1) + '/' + d.getDate();
+        });
+        const data = (views.views || []).map(v => v.count);
+        const uniqData = (views.views || []).map(v => v.uniques);
+
+        if (viewsChart) viewsChart.destroy();
+        const ctx = document.getElementById('viewsChart').getContext('2d');
+        viewsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: 'Views', data: data, backgroundColor: '#000', borderWidth: 0 },
+                    { label: 'Uniques', data: uniqData, backgroundColor: '#ccc', borderWidth: 0 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { font: { size: 11 } } },
+                    x: { ticks: { font: { size: 11 } } }
+                }
+            }
+        });
+
+        // Referrers table
+        const refBody = document.getElementById('referrers-body');
+        if (referrers && referrers.length) {
+            refBody.innerHTML = referrers.map(r =>
+                '<tr><td>' + esc(r.referrer) + '</td><td>' + r.count + '</td><td>' + r.uniques + '</td></tr>'
+            ).join('');
+        } else {
+            refBody.innerHTML = '<tr><td colspan="3" style="color:#888">No data yet</td></tr>';
+        }
+
+        // Paths table
+        const pathBody = document.getElementById('paths-body');
+        if (paths && paths.length) {
+            pathBody.innerHTML = paths.map(p =>
+                '<tr><td>' + esc(p.path) + '</td><td>' + p.count + '</td><td>' + p.uniques + '</td></tr>'
+            ).join('');
+        } else {
+            pathBody.innerHTML = '<tr><td colspan="3" style="color:#888">No data yet</td></tr>';
+        }
+
+    } catch (e) {
+        console.error('Analytics error:', e);
+        document.getElementById('stat-views').textContent = 'Error';
+    }
+}
+
+// ════════════════════════════════════════════
+// ARTICLES
+// ════════════════════════════════════════════
+let articles = [];
+let editingFile = null; // null = new, string = filename
+let editingSha = null;
+
+async function loadArticles() {
+    if (!getPat()) {
+        document.getElementById('articleList').innerHTML = '<div class="empty-state"><p>Set GitHub PAT in Settings to manage articles.</p></div>';
+        return;
+    }
+
+    try {
+        const files = await ghApi('/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/');
+        articles = files
+            .filter(f => f.name.match(/^fathom-\d{3}\.html$/))
+            .sort((a, b) => b.name.localeCompare(a.name));
+
+        document.getElementById('stat-articles').textContent = articles.length;
+
+        if (!articles.length) {
+            document.getElementById('articleList').innerHTML = '<div class="empty-state"><p>No articles yet.</p><p>Click "+ New Article" to create your first letter.</p></div>';
+            return;
+        }
+
+        // Fetch each article to get title and date from content
+        const details = await Promise.all(articles.map(async (a) => {
+            try {
+                const file = await ghApi('/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + a.name);
+                const html = atob(file.content);
+                const titleMatch = html.match(/<h1[^>]*>([^<]+)<\/h1>/);
+                const metaMatch = html.match(/<p class="meta">([^<]+)<\/p>/);
+                return {
+                    name: a.name,
+                    sha: file.sha,
+                    title: titleMatch ? titleMatch[1] : a.name,
+                    meta: metaMatch ? metaMatch[1] : '',
+                    number: parseInt(a.name.match(/\d{3}/)[0])
+                };
+            } catch (e) {
+                return { name: a.name, sha: a.sha, title: a.name, meta: '', number: 0 };
+            }
+        }));
+
+        let html = '';
+        details.forEach(d => {
+            html += '<div class="article-list-row">' +
+                '<div class="info">' +
+                    '<div class="title">' + esc(d.title) + '</div>' +
+                    '<div class="meta">' + esc(d.meta) + ' &middot; ' + esc(d.name) + '</div>' +
+                '</div>' +
+                '<div class="btns">' +
+                    '<button class="btn-edit" onclick="editArticle(\'' + d.name + '\',\'' + d.sha + '\')">Edit</button>' +
+                    '<button class="btn-danger" onclick="deleteArticle(\'' + d.name + '\',\'' + d.sha + '\')">Delete</button>' +
+                '</div>' +
+            '</div>';
+        });
+        document.getElementById('articleList').innerHTML = html;
+
+    } catch (e) {
+        console.error('Load articles error:', e);
+        document.getElementById('articleList').innerHTML = '<div class="empty-state"><p>Error loading: ' + esc(e.message) + '</p></div>';
+    }
+}
+
+function openEditor(filename) {
+    editingFile = filename;
+    editingSha = null;
+    document.getElementById('editorTitle').textContent = filename ? 'Edit Article' : 'New Article';
+
+    if (!filename) {
+        // New article - auto-fill next number
+        const maxNum = articles.reduce((max, a) => {
+            const m = a.name.match(/(\d{3})/);
+            return m ? Math.max(max, parseInt(m[1])) : max;
+        }, 0);
+        document.getElementById('ed-number').value = maxNum + 1;
+        document.getElementById('ed-title').value = '';
+        document.getElementById('ed-date').value = '';
+        document.getElementById('ed-week').value = '';
+        document.getElementById('ed-body').value = '## 시장\n\n\n## 딜/투자\n\n\n## 수련\n\n\n## 한 문장\n\n';
+    }
+
+    document.getElementById('articleListView').style.display = 'none';
+    document.getElementById('editorPanel').classList.add('active');
+    document.getElementById('previewPanel').classList.remove('active');
+}
+
+function closeEditor() {
+    document.getElementById('editorPanel').classList.remove('active');
+    document.getElementById('articleListView').style.display = 'block';
+}
+
+async function editArticle(filename, sha) {
+    editingFile = filename;
+    editingSha = sha;
+
+    try {
+        toast('Loading article...');
+        const file = await ghApi('/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + filename);
+        const html = atob(file.content);
+        editingSha = file.sha;
+
+        // Extract metadata
+        const numMatch = filename.match(/(\d{3})/);
+        const titleMatch = html.match(/<h1[^>]*>Fathom #\d+ — ([^<]+)<\/h1>/);
+        const metaMatch = html.match(/<p class="meta">(\d{4}-\d{2}-\d{2}) · (W\d+)<\/p>/);
+
+        document.getElementById('ed-number').value = numMatch ? parseInt(numMatch[1]) : '';
+        document.getElementById('ed-title').value = titleMatch ? titleMatch[1] : '';
+        document.getElementById('ed-date').value = metaMatch ? metaMatch[1] : '';
+        document.getElementById('ed-week').value = metaMatch ? metaMatch[2] : '';
+
+        // Try to extract markdown source from comment
+        const srcMatch = html.match(/<!-- FATHOM_SOURCE\n([\s\S]*?)-->/);
+        if (srcMatch) {
+            document.getElementById('ed-body').value = srcMatch[1].trim();
+        } else {
+            // Parse HTML body to approximate markdown
+            const bodyMatch = html.match(/<hr>\s*([\s\S]*?)\s*<hr>\s*<div class="nav">/);
+            if (bodyMatch) {
+                let body = bodyMatch[1]
+                    .replace(/<h2[^>]*>(.*?)<\/h2>/g, '## $1\n')
+                    .replace(/<p>(.*?)<\/p>/g, '$1\n')
+                    .replace(/<blockquote>\s*<p>(.*?)<\/p>\s*<\/blockquote>/g, '> $1\n')
+                    .replace(/<\/?[^>]+>/g, '')
+                    .replace(/&amp;/g, '&')
+                    .replace(/&lt;/g, '<')
+                    .replace(/&gt;/g, '>')
+                    .replace(/\n{3,}/g, '\n\n')
+                    .trim();
+                document.getElementById('ed-body').value = body;
+            } else {
+                document.getElementById('ed-body').value = '';
+            }
+        }
+
+        openEditor(filename);
+        hideToast();
+    } catch (e) {
+        toast('Error loading: ' + e.message, 'error');
+    }
+}
+
+async function deleteArticle(filename, sha) {
+    if (!confirm('Delete ' + filename + '? This cannot be undone.')) return;
+
+    try {
+        toast('Deleting...');
+
+        // Delete the file
+        await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + filename, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'token ' + getPat(),
+                'Accept': 'application/vnd.github.v3+json'
+            },
+            body: JSON.stringify({
+                message: 'Delete ' + filename,
+                sha: sha
+            })
+        });
+
+        // Update index.html
+        await updateIndexPage('delete', filename);
+
+        toast('Deleted successfully', 'success');
+        loadArticles();
+    } catch (e) {
+        toast('Error: ' + e.message, 'error');
+    }
+}
+
+function togglePreview() {
+    const panel = document.getElementById('previewPanel');
+    if (panel.classList.contains('active')) {
+        panel.classList.remove('active');
+        return;
+    }
+
+    const num = document.getElementById('ed-number').value.padStart(3, '0');
+    const title = document.getElementById('ed-title').value;
+    const date = document.getElementById('ed-date').value;
+    const week = document.getElementById('ed-week').value;
+    const body = document.getElementById('ed-body').value;
+
+    const rendered = marked.parse(body);
+    document.getElementById('previewContent').innerHTML =
+        '<h1>Fathom #' + esc(num) + ' — ' + esc(title) + '</h1>' +
+        '<p class="preview-meta">' + esc(date) + ' · ' + esc(week) + '</p>' +
+        '<hr>' + rendered;
+
+    panel.classList.add('active');
+}
+
+async function publishArticle() {
+    const num = parseInt(document.getElementById('ed-number').value);
+    const title = document.getElementById('ed-title').value.trim();
+    const date = document.getElementById('ed-date').value;
+    const week = document.getElementById('ed-week').value.trim();
+    const body = document.getElementById('ed-body').value;
+
+    if (!num || !title || !date || !week || !body.trim()) {
+        toast('Please fill all fields', 'error');
+        return;
+    }
+
+    const numStr = String(num).padStart(3, '0');
+    const filename = 'fathom-' + numStr + '.html';
+    const renderedBody = marked.parse(body);
+
+    // Generate full HTML
+    const html = buildLetterHtml(numStr, title, date, week, renderedBody, body);
+
+    try {
+        document.getElementById('btn-publish').disabled = true;
+        document.getElementById('btn-publish').textContent = 'Publishing...';
+
+        // Check if file exists (for update vs create)
+        let existingSha = editingSha;
+        if (!existingSha && editingFile) {
+            try {
+                const existing = await ghApi('/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + filename);
+                existingSha = existing.sha;
+            } catch (e) { /* file doesn't exist */ }
+        }
+
+        // Push the article file
+        const payload = {
+            message: (existingSha ? 'Update' : 'Publish') + ' Fathom #' + numStr + ' — ' + title,
+            content: btoa(unescape(encodeURIComponent(html)))
+        };
+        if (existingSha) payload.sha = existingSha;
+
+        await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + filename, {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'token ' + getPat(),
+                'Accept': 'application/vnd.github.v3+json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        // Update index.html
+        if (!existingSha) {
+            await updateIndexPage('add', filename, { number: numStr, title: title, date: date });
+        }
+
+        toast('Published successfully!', 'success');
+        closeEditor();
+        loadArticles();
+
+    } catch (e) {
+        toast('Publish error: ' + e.message, 'error');
+    } finally {
+        document.getElementById('btn-publish').disabled = false;
+        document.getElementById('btn-publish').textContent = 'Publish';
+    }
+}
+
+function buildLetterHtml(num, title, date, week, renderedBody, rawMarkdown) {
+    return '<!DOCTYPE html>\n' +
+'<html lang="ko">\n' +
+'<head>\n' +
+'    <meta charset="UTF-8">\n' +
+'    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+'    <title>Fathom #' + num + ' \u2014 ' + esc(title) + '</title>\n' +
+'    <style>\n' +
+'        body {\n' +
+'            font-family: \'Times New Roman\', Times, serif;\n' +
+'            background-color: #ffffff;\n' +
+'            color: #000000;\n' +
+'            max-width: 600px;\n' +
+'            margin: 40px auto;\n' +
+'            padding: 0 20px;\n' +
+'            font-size: 15px;\n' +
+'            line-height: 1.8;\n' +
+'        }\n' +
+'        a { color: #0000ff; text-decoration: none; }\n' +
+'        a:visited { color: #800080; }\n' +
+'        a:hover { text-decoration: underline; }\n' +
+'        .header { margin-bottom: 30px; }\n' +
+'        .header .brand { font-size: 12px; letter-spacing: 2px; color: #888; margin: 0; }\n' +
+'        .header h1 { font-size: 20px; font-weight: bold; margin: 16px 0 4px 0; }\n' +
+'        .header .meta { font-size: 13px; color: #666; margin: 0; }\n' +
+'        hr { border: none; border-top: 1px solid #000; margin: 24px 0; }\n' +
+'        h2 { font-size: 15px; font-weight: bold; margin: 28px 0 8px 0; letter-spacing: 1px; }\n' +
+'        h2::before { content: "["; }\n' +
+'        h2::after { content: "]"; }\n' +
+'        p { margin: 8px 0; }\n' +
+'        blockquote { margin: 12px 0; padding-left: 16px; border-left: 2px solid #ccc; color: #444; font-style: italic; }\n' +
+'        ul, ol { padding-left: 24px; }\n' +
+'        li { margin: 4px 0; }\n' +
+'        .nav { margin-top: 40px; font-size: 13px; }\n' +
+'        .footer { margin-top: 30px; font-size: 12px; color: #888; }\n' +
+'    </style>\n' +
+'</head>\n' +
+'<body>\n' +
+'\n' +
+'<div class="header">\n' +
+'    <p class="brand">' + SITE_TITLE + '</p>\n' +
+'    <h1>Fathom #' + num + ' \u2014 ' + esc(title) + '</h1>\n' +
+'    <p class="meta">' + esc(date) + ' \u00b7 ' + esc(week) + '</p>\n' +
+'</div>\n' +
+'\n' +
+'<hr>\n' +
+'\n' +
+renderedBody + '\n' +
+'\n' +
+'<hr>\n' +
+'\n' +
+'<div class="nav">\n' +
+'    <a href="index.html">\u2190 \uc544\uce74\uc774\ube0c\ub85c \ub3cc\uc544\uac00\uae30</a>\n' +
+'</div>\n' +
+'\n' +
+'<div class="footer">\n' +
+'    <p>&copy; 2026\u2013 ' + SITE_TITLE + '. All rights reserved.</p>\n' +
+'</div>\n' +
+'\n' +
+'<!-- FATHOM_SOURCE\n' + rawMarkdown + '\n-->\n' +
+'\n' +
+'</body>\n' +
+'</html>';
+}
+
+async function updateIndexPage(action, filename, articleInfo) {
+    try {
+        // Fetch current index.html
+        const file = await ghApi('/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/index.html');
+        let html = decodeURIComponent(escape(atob(file.content)));
+
+        if (action === 'add' && articleInfo) {
+            // Build new list item
+            const li = '\n    <li>\n' +
+                '        <span class="number">' + articleInfo.number + '</span>\n' +
+                '        <a href="' + filename + '">' + articleInfo.title + '</a>\n' +
+                '        <span class="date">' + articleInfo.date + '</span>\n' +
+                '    </li>\n';
+
+            // Insert before </ul>
+            const ulClose = html.lastIndexOf('</ul>');
+            if (ulClose > -1) {
+                html = html.slice(0, ulClose) + li + html.slice(ulClose);
+            }
+        } else if (action === 'delete') {
+            // Remove the <li> containing this filename
+            const regex = new RegExp('\\s*<li>[\\s\\S]*?' + filename.replace('.', '\\.') + '[\\s\\S]*?</li>', 'g');
+            html = html.replace(regex, '');
+        }
+
+        // Push updated index.html
+        await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/index.html', {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'token ' + getPat(),
+                'Accept': 'application/vnd.github.v3+json'
+            },
+            body: JSON.stringify({
+                message: (action === 'add' ? 'Add' : 'Remove') + ' ' + filename + ' from index',
+                content: btoa(unescape(encodeURIComponent(html))),
+                sha: file.sha
+            })
+        });
+    } catch (e) {
+        console.error('Index update error:', e);
+        toast('Warning: article ' + action + 'd but index.html update failed. Rebuild site to fix.', 'error');
+    }
+}
+
+// ════════════════════════════════════════════
+// SETTINGS
+// ════════════════════════════════════════════
+function savePat() {
+    const pat = document.getElementById('pat-input').value.trim();
+    if (!pat) { toast('Please enter a token', 'error'); return; }
+    sessionStorage.setItem('tra_pat', pat);
+    document.getElementById('pat-input').value = '';
+    checkPat();
+    toast('Token saved for this session', 'success');
+    loadOverview();
+    loadArticles();
+}
+
+function checkPat() {
+    const el = document.getElementById('patStatus');
+    if (getPat()) {
+        el.textContent = 'Active';
+        el.className = 'pat-status ok';
+    } else {
+        el.textContent = 'Not Set';
+        el.className = 'pat-status missing';
+    }
+}
+
+// ════════════════════════════════════════════
+// UTILS
+// ════════════════════════════════════════════
+function esc(s) {
+    const d = document.createElement('div');
+    d.textContent = s || '';
+    return d.innerHTML;
+}
+
+function toast(msg, type) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'toast' + (type ? ' ' + type : '');
+    el.style.display = 'block';
+    if (type) setTimeout(hideToast, 3000);
+}
+
+function hideToast() {
+    document.getElementById('toast').style.display = 'none';
+}
+</script>
+
+</body>
+</html>
