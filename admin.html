@@ -606,15 +606,19 @@ async function doLogin() {
 
 function doLogout() {
     localStorage.removeItem('tra_auth');
-    localStorage.removeItem('tra_pat');
     location.reload();
 }
 
 function showDashboard() {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
-    loadOverview();
-    loadArticles();
+    if (!getPat()) {
+        switchTab('settings');
+        toast('GitHub 토큰을 한 번만 입력하면 이후 자동 연동됩니다.', 'error');
+    } else {
+        loadOverview();
+        loadArticles();
+    }
     checkPat();
 }
 
@@ -1130,9 +1134,10 @@ function savePat() {
     localStorage.setItem('tra_pat', pat);
     document.getElementById('pat-input').value = '';
     checkPat();
-    toast('토큰 저장 완료 (현재 세션)', 'success');
+    toast('토큰 저장 완료', 'success');
     loadOverview();
     loadArticles();
+    switchTab('overview');
 }
 
 function checkPat() {
