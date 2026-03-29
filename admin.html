@@ -554,7 +554,7 @@
                 <button class="btn-primary" onclick="savePat()" style="margin-top:8px;">토큰 저장</button>
                 <p class="hint">
                     글 발행 및 방문자 통계 조회에 필요합니다.<br>
-                    토큰은 현재 브라우저 세션에만 저장됩니다 (브라우저 닫으면 삭제).<br>
+                    토큰은 이 브라우저에 저장됩니다 (로그아웃 시 삭제).<br>
                     <code>repo</code> 권한 필요. github.com/settings/tokens 에서 생성.
                 </p>
             </div>
@@ -597,7 +597,7 @@ async function doLogin() {
     const pw = document.getElementById('loginPw').value;
     const hash = await sha256(pw);
     if (email === AUTH_EMAIL && hash === AUTH_HASH) {
-        sessionStorage.setItem('tra_auth', '1');
+        localStorage.setItem('tra_auth', '1');
         showDashboard();
     } else {
         document.getElementById('loginError').style.display = 'block';
@@ -605,8 +605,8 @@ async function doLogin() {
 }
 
 function doLogout() {
-    sessionStorage.removeItem('tra_auth');
-    sessionStorage.removeItem('tra_pat');
+    localStorage.removeItem('tra_auth');
+    localStorage.removeItem('tra_pat');
     location.reload();
 }
 
@@ -620,7 +620,7 @@ function showDashboard() {
 
 // Auto-login check
 document.addEventListener('DOMContentLoaded', function() {
-    if (sessionStorage.getItem('tra_auth') === '1') showDashboard();
+    if (localStorage.getItem('tra_auth') === '1') showDashboard();
     document.getElementById('loginPw').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') doLogin();
     });
@@ -641,7 +641,7 @@ function switchTab(name) {
 // ════════════════════════════════════════════
 // GITHUB API
 // ════════════════════════════════════════════
-function getPat() { return sessionStorage.getItem('tra_pat') || ''; }
+function getPat() { return localStorage.getItem('tra_pat') || ''; }
 
 function b64ToUtf8(b64) {
     const bin = atob(b64);
@@ -1127,7 +1127,7 @@ async function updateIndexPage(action, filename, articleInfo) {
 function savePat() {
     const pat = document.getElementById('pat-input').value.trim();
     if (!pat) { toast('토큰을 입력하세요', 'error'); return; }
-    sessionStorage.setItem('tra_pat', pat);
+    localStorage.setItem('tra_pat', pat);
     document.getElementById('pat-input').value = '';
     checkPat();
     toast('토큰 저장 완료 (현재 세션)', 'success');
