@@ -643,6 +643,13 @@ function switchTab(name) {
 // ════════════════════════════════════════════
 function getPat() { return sessionStorage.getItem('tra_pat') || ''; }
 
+function b64ToUtf8(b64) {
+    const bin = atob(b64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder('utf-8').decode(bytes);
+}
+
 async function ghApi(path, opts = {}) {
     const pat = getPat();
     if (!pat) { toast('GitHub 토큰이 설정되지 않았습니다. 설정 탭에서 입력하세요.', 'error'); return null; }
@@ -774,7 +781,7 @@ async function loadArticles() {
         const details = await Promise.all(articles.map(async (a) => {
             try {
                 const file = await ghApi('/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + a.name);
-                const html = atob(file.content);
+                const html = b64ToUtf8(file.content);
                 const titleMatch = html.match(/<h1[^>]*>([^<]+)<\/h1>/);
                 const metaMatch = html.match(/<p class="meta">([^<]+)<\/p>/);
                 return {
@@ -845,7 +852,7 @@ async function editArticle(filename, sha) {
     try {
         toast('글 불러오는 중...');
         const file = await ghApi('/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + filename);
-        const html = atob(file.content);
+        const html = b64ToUtf8(file.content);
         editingSha = file.sha;
 
         // Extract metadata
@@ -1074,7 +1081,7 @@ async function updateIndexPage(action, filename, articleInfo) {
     try {
         // Fetch current index.html
         const file = await ghApi('/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/index.html');
-        let html = decodeURIComponent(escape(atob(file.content)));
+        let html = b64ToUtf8(file.content);
 
         if (action === 'add' && articleInfo) {
             // Build new list item
