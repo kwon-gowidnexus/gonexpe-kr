@@ -28,10 +28,6 @@
             letter-spacing: 2px;
             margin: 0 0 4px 0;
         }
-        .header .author {
-            font-size: 16px;
-            margin: 4px 0;
-        }
         .header .tagline {
             font-style: italic;
             font-size: 14px;
@@ -82,19 +78,49 @@
             font-style: italic;
             margin: 20px 0;
         }
+        .search-box {
+            margin-bottom: 20px;
+        }
+        .search-box input {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            width: 100%;
+            padding: 6px 0;
+            border: none;
+            border-bottom: 1px solid #000;
+            outline: none;
+            background: transparent;
+            box-sizing: border-box;
+        }
+        .search-box input::placeholder {
+            color: #999;
+            font-style: italic;
+        }
+        .letter-list li.hidden {
+            display: none;
+        }
+        .copyright {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+        }
     </style>
 </head>
 <body>
 
 <div class="header">
     <h1>THE RAZOR ACADEMY</h1>
-    <p class="author">권영인</p>
     <p class="tagline">"비대칭을 설계한다"</p>
 </div>
 
 <hr>
 
 <p class="section-title">Fathom — Weekly Letter</p>
+
+<div class="search-box">
+    <input type="text" id="search" placeholder="Search..." oninput="filterLetters()">
+</div>
 
 
 <ul class="letter-list">
@@ -121,9 +147,20 @@
     <p>&nbsp;</p>
     <p>Razor: 비대칭을 설계하는 사람.</p>
     <p>Fathom: 그 깊이를 기록한 것.</p>
-    <p>&nbsp;</p>
-    <p>gonexpe.kr</p>
 </div>
+
+<p class="copyright">&copy; 2026– THE RAZOR ACADEMY. All rights reserved.</p>
+
+<script>
+function filterLetters() {
+    var q = document.getElementById('search').value.toLowerCase();
+    var items = document.querySelectorAll('.letter-list li');
+    items.forEach(function(li) {
+        var text = li.textContent.toLowerCase();
+        li.classList.toggle('hidden', q && text.indexOf(q) === -1);
+    });
+}
+</script>
 
 </body>
 </html>
