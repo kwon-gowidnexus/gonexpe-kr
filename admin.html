@@ -417,11 +417,11 @@
 <div class="login-wrap" id="loginScreen">
     <div class="login-box">
         <h1>THE RAZOR ACADEMY</h1>
-        <p class="sub">Admin Console</p>
-        <input type="email" id="loginEmail" placeholder="Email" autocomplete="email">
-        <input type="password" id="loginPw" placeholder="Password" autocomplete="current-password">
-        <button onclick="doLogin()">Sign In</button>
-        <p class="login-error" id="loginError">Invalid credentials</p>
+        <p class="sub">관리자 콘솔</p>
+        <input type="email" id="loginEmail" placeholder="이메일" autocomplete="email">
+        <input type="password" id="loginPw" placeholder="비밀번호" autocomplete="current-password">
+        <button onclick="doLogin()">로그인</button>
+        <p class="login-error" id="loginError">이메일 또는 비밀번호가 올바르지 않습니다</p>
     </div>
 </div>
 
@@ -430,18 +430,18 @@
 
     <!-- Top Bar -->
     <div class="top-bar">
-        <div class="brand">THE RAZOR ACADEMY <span>Admin</span></div>
+        <div class="brand">THE RAZOR ACADEMY <span>관리자</span></div>
         <div class="actions">
-            <a href="/" target="_blank">View Site</a>
-            <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+            <a href="/" target="_blank">사이트 보기</a>
+            <button class="btn-logout" onclick="doLogout()">로그아웃</button>
         </div>
     </div>
 
     <!-- Tabs -->
     <div class="tab-nav">
-        <button class="active" onclick="switchTab('overview')">Overview</button>
-        <button onclick="switchTab('articles')">Articles</button>
-        <button onclick="switchTab('settings')">Settings</button>
+        <button class="active" onclick="switchTab('overview')">대시보드</button>
+        <button onclick="switchTab('articles')">글 관리</button>
+        <button onclick="switchTab('settings')">설정</button>
     </div>
 
     <!-- ── Overview Tab ── -->
@@ -449,45 +449,45 @@
         <div class="tab-panel active" id="tab-overview">
             <div class="card-row">
                 <div class="card">
-                    <div class="label">Views (14d)</div>
+                    <div class="label">조회수 (14일)</div>
                     <div class="value" id="stat-views">—</div>
-                    <div class="note">Total page views</div>
+                    <div class="note">전체 페이지뷰</div>
                 </div>
                 <div class="card">
-                    <div class="label">Unique Visitors (14d)</div>
+                    <div class="label">방문자 (14일)</div>
                     <div class="value" id="stat-uniques">—</div>
-                    <div class="note">Unique visitors</div>
+                    <div class="note">고유 방문자 수</div>
                 </div>
                 <div class="card">
-                    <div class="label">Top Referrer</div>
+                    <div class="label">주요 유입 채널</div>
                     <div class="value" id="stat-top-ref" style="font-size:16px;">—</div>
-                    <div class="note">Most traffic source</div>
+                    <div class="note">가장 많은 트래픽 소스</div>
                 </div>
                 <div class="card">
-                    <div class="label">Articles</div>
+                    <div class="label">발행 글</div>
                     <div class="value" id="stat-articles">—</div>
-                    <div class="note">Published letters</div>
+                    <div class="note">게시된 레터 수</div>
                 </div>
             </div>
 
             <div class="chart-wrap">
-                <h3>Daily Views (14 days)</h3>
+                <h3>일별 조회수 (14일)</h3>
                 <canvas id="viewsChart"></canvas>
             </div>
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
                 <div class="data-table">
-                    <h3>Top Referrers</h3>
+                    <h3>유입 채널</h3>
                     <table>
-                        <thead><tr><th>Source</th><th>Count</th><th>Uniques</th></tr></thead>
-                        <tbody id="referrers-body"><tr><td colspan="3" style="color:#888">Loading...</td></tr></tbody>
+                        <thead><tr><th>소스</th><th>조회수</th><th>방문자</th></tr></thead>
+                        <tbody id="referrers-body"><tr><td colspan="3" style="color:#888">불러오는 중...</td></tr></tbody>
                     </table>
                 </div>
                 <div class="data-table">
-                    <h3>Popular Pages</h3>
+                    <h3>인기 페이지</h3>
                     <table>
-                        <thead><tr><th>Path</th><th>Views</th><th>Uniques</th></tr></thead>
-                        <tbody id="paths-body"><tr><td colspan="3" style="color:#888">Loading...</td></tr></tbody>
+                        <thead><tr><th>경로</th><th>조회수</th><th>방문자</th></tr></thead>
+                        <tbody id="paths-body"><tr><td colspan="3" style="color:#888">불러오는 중...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -498,45 +498,45 @@
             <!-- List View -->
             <div id="articleListView">
                 <div class="article-toolbar">
-                    <h2>Articles</h2>
-                    <button class="btn-primary" onclick="openEditor(null)">+ New Article</button>
+                    <h2>글 목록</h2>
+                    <button class="btn-primary" onclick="openEditor(null)">+ 새 글 작성</button>
                 </div>
                 <div class="data-table">
-                    <div id="articleList"><div class="loading">Loading articles...</div></div>
+                    <div id="articleList"><div class="loading">불러오는 중...</div></div>
                 </div>
             </div>
 
             <!-- Editor View -->
             <div class="editor-panel" id="editorPanel">
                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
-                    <h2 id="editorTitle">New Article</h2>
-                    <button class="btn-secondary" onclick="closeEditor()">Back to list</button>
+                    <h2 id="editorTitle">새 글 작성</h2>
+                    <button class="btn-secondary" onclick="closeEditor()">목록으로</button>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Number</label>
+                        <label>번호</label>
                         <input type="number" id="ed-number" placeholder="2">
                     </div>
                     <div class="form-group">
-                        <label>Title</label>
+                        <label>제목</label>
                         <input type="text" id="ed-title" placeholder="레터 제목">
                     </div>
                     <div class="form-group">
-                        <label>Date</label>
+                        <label>날짜</label>
                         <input type="date" id="ed-date">
                     </div>
                     <div class="form-group">
-                        <label>Week</label>
+                        <label>주차</label>
                         <input type="text" id="ed-week" placeholder="W15">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Body (Markdown)</label>
+                    <label>본문 (마크다운)</label>
                     <textarea id="ed-body" placeholder="## 시장&#10;본문...&#10;&#10;## 딜/투자&#10;본문...&#10;&#10;## 수련&#10;본문...&#10;&#10;## 한 문장&#10;본문..."></textarea>
                 </div>
                 <div class="editor-actions">
-                    <button class="btn-primary" onclick="publishArticle()" id="btn-publish">Publish</button>
-                    <button class="btn-secondary" onclick="togglePreview()">Preview</button>
+                    <button class="btn-primary" onclick="publishArticle()" id="btn-publish">발행</button>
+                    <button class="btn-secondary" onclick="togglePreview()">미리보기</button>
                 </div>
                 <div class="preview-panel" id="previewPanel">
                     <div id="previewContent"></div>
@@ -547,24 +547,24 @@
         <!-- ── Settings Tab ── -->
         <div class="tab-panel" id="tab-settings">
             <div class="settings-card">
-                <h3>GitHub Personal Access Token <span class="pat-status missing" id="patStatus">Not Set</span></h3>
+                <h3>GitHub 토큰 <span class="pat-status missing" id="patStatus">미설정</span></h3>
                 <div class="form-group">
                     <input type="password" id="pat-input" placeholder="ghp_xxxxxxxxxxxx">
                 </div>
-                <button class="btn-primary" onclick="savePat()" style="margin-top:8px;">Save Token</button>
+                <button class="btn-primary" onclick="savePat()" style="margin-top:8px;">토큰 저장</button>
                 <p class="hint">
-                    Required for publishing articles and viewing analytics.<br>
-                    Token is stored in this browser session only (cleared on close).<br>
-                    Needs <code>repo</code> scope. Create at github.com/settings/tokens.
+                    글 발행 및 방문자 통계 조회에 필요합니다.<br>
+                    토큰은 현재 브라우저 세션에만 저장됩니다 (브라우저 닫으면 삭제).<br>
+                    <code>repo</code> 권한 필요. github.com/settings/tokens 에서 생성.
                 </p>
             </div>
             <div class="settings-card">
-                <h3>Site Info</h3>
+                <h3>사이트 정보</h3>
                 <p style="font-size:13px; color:#555;">
-                    Domain: <strong>gonexpe.kr</strong><br>
-                    Repository: <strong>kwon-gowidnexus/gonexpe-kr</strong><br>
-                    Hosting: GitHub Pages<br>
-                    SSL: Let's Encrypt (auto)
+                    도메인: <strong>gonexpe.kr</strong><br>
+                    레포지토리: <strong>kwon-gowidnexus/gonexpe-kr</strong><br>
+                    호스팅: GitHub Pages<br>
+                    SSL: Let's Encrypt (자동)
                 </p>
             </div>
         </div>
@@ -645,7 +645,7 @@ function getPat() { return sessionStorage.getItem('tra_pat') || ''; }
 
 async function ghApi(path, opts = {}) {
     const pat = getPat();
-    if (!pat) { toast('GitHub PAT not set. Go to Settings.', 'error'); return null; }
+    if (!pat) { toast('GitHub 토큰이 설정되지 않았습니다. 설정 탭에서 입력하세요.', 'error'); return null; }
     const url = 'https://api.github.com' + path;
     const res = await fetch(url, {
         headers: {
@@ -672,7 +672,7 @@ async function loadOverview() {
     if (!getPat()) {
         document.getElementById('stat-views').textContent = '—';
         document.getElementById('stat-uniques').textContent = '—';
-        document.getElementById('stat-top-ref').textContent = 'Set PAT';
+        document.getElementById('stat-top-ref').textContent = '토큰 필요';
         return;
     }
 
@@ -703,8 +703,8 @@ async function loadOverview() {
             data: {
                 labels: labels,
                 datasets: [
-                    { label: 'Views', data: data, backgroundColor: '#000', borderWidth: 0 },
-                    { label: 'Uniques', data: uniqData, backgroundColor: '#ccc', borderWidth: 0 }
+                    { label: '조회수', data: data, backgroundColor: '#000', borderWidth: 0 },
+                    { label: '방문자', data: uniqData, backgroundColor: '#ccc', borderWidth: 0 }
                 ]
             },
             options: {
@@ -725,7 +725,7 @@ async function loadOverview() {
                 '<tr><td>' + esc(r.referrer) + '</td><td>' + r.count + '</td><td>' + r.uniques + '</td></tr>'
             ).join('');
         } else {
-            refBody.innerHTML = '<tr><td colspan="3" style="color:#888">No data yet</td></tr>';
+            refBody.innerHTML = '<tr><td colspan="3" style="color:#888">데이터 없음</td></tr>';
         }
 
         // Paths table
@@ -735,12 +735,12 @@ async function loadOverview() {
                 '<tr><td>' + esc(p.path) + '</td><td>' + p.count + '</td><td>' + p.uniques + '</td></tr>'
             ).join('');
         } else {
-            pathBody.innerHTML = '<tr><td colspan="3" style="color:#888">No data yet</td></tr>';
+            pathBody.innerHTML = '<tr><td colspan="3" style="color:#888">데이터 없음</td></tr>';
         }
 
     } catch (e) {
         console.error('Analytics error:', e);
-        document.getElementById('stat-views').textContent = 'Error';
+        document.getElementById('stat-views').textContent = '오류';
     }
 }
 
@@ -753,7 +753,7 @@ let editingSha = null;
 
 async function loadArticles() {
     if (!getPat()) {
-        document.getElementById('articleList').innerHTML = '<div class="empty-state"><p>Set GitHub PAT in Settings to manage articles.</p></div>';
+        document.getElementById('articleList').innerHTML = '<div class="empty-state"><p>설정 탭에서 GitHub 토큰을 입력하세요.</p></div>';
         return;
     }
 
@@ -766,7 +766,7 @@ async function loadArticles() {
         document.getElementById('stat-articles').textContent = articles.length;
 
         if (!articles.length) {
-            document.getElementById('articleList').innerHTML = '<div class="empty-state"><p>No articles yet.</p><p>Click "+ New Article" to create your first letter.</p></div>';
+            document.getElementById('articleList').innerHTML = '<div class="empty-state"><p>아직 글이 없습니다.</p><p>"+ 새 글 작성" 버튼을 눌러 첫 번째 레터를 작성하세요.</p></div>';
             return;
         }
 
@@ -797,8 +797,8 @@ async function loadArticles() {
                     '<div class="meta">' + esc(d.meta) + ' &middot; ' + esc(d.name) + '</div>' +
                 '</div>' +
                 '<div class="btns">' +
-                    '<button class="btn-edit" onclick="editArticle(\'' + d.name + '\',\'' + d.sha + '\')">Edit</button>' +
-                    '<button class="btn-danger" onclick="deleteArticle(\'' + d.name + '\',\'' + d.sha + '\')">Delete</button>' +
+                    '<button class="btn-edit" onclick="editArticle(\'' + d.name + '\',\'' + d.sha + '\')">수정</button>' +
+                    '<button class="btn-danger" onclick="deleteArticle(\'' + d.name + '\',\'' + d.sha + '\')">삭제</button>' +
                 '</div>' +
             '</div>';
         });
@@ -806,14 +806,14 @@ async function loadArticles() {
 
     } catch (e) {
         console.error('Load articles error:', e);
-        document.getElementById('articleList').innerHTML = '<div class="empty-state"><p>Error loading: ' + esc(e.message) + '</p></div>';
+        document.getElementById('articleList').innerHTML = '<div class="empty-state"><p>불러오기 오류: ' + esc(e.message) + '</p></div>';
     }
 }
 
 function openEditor(filename) {
     editingFile = filename;
     editingSha = null;
-    document.getElementById('editorTitle').textContent = filename ? 'Edit Article' : 'New Article';
+    document.getElementById('editorTitle').textContent = filename ? '글 수정' : '새 글 작성';
 
     if (!filename) {
         // New article - auto-fill next number
@@ -843,7 +843,7 @@ async function editArticle(filename, sha) {
     editingSha = sha;
 
     try {
-        toast('Loading article...');
+        toast('글 불러오는 중...');
         const file = await ghApi('/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + filename);
         const html = atob(file.content);
         editingSha = file.sha;
@@ -885,15 +885,15 @@ async function editArticle(filename, sha) {
         openEditor(filename);
         hideToast();
     } catch (e) {
-        toast('Error loading: ' + e.message, 'error');
+        toast('불러오기 오류: ' + e.message, 'error');
     }
 }
 
 async function deleteArticle(filename, sha) {
-    if (!confirm('Delete ' + filename + '? This cannot be undone.')) return;
+    if (!confirm(filename + ' 을(를) 삭제하시겠습니까? 되돌릴 수 없습니다.')) return;
 
     try {
-        toast('Deleting...');
+        toast('삭제 중...');
 
         // Delete the file
         await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + filename, {
@@ -911,10 +911,10 @@ async function deleteArticle(filename, sha) {
         // Update index.html
         await updateIndexPage('delete', filename);
 
-        toast('Deleted successfully', 'success');
+        toast('삭제 완료', 'success');
         loadArticles();
     } catch (e) {
-        toast('Error: ' + e.message, 'error');
+        toast('오류: ' + e.message, 'error');
     }
 }
 
@@ -948,7 +948,7 @@ async function publishArticle() {
     const body = document.getElementById('ed-body').value;
 
     if (!num || !title || !date || !week || !body.trim()) {
-        toast('Please fill all fields', 'error');
+        toast('모든 항목을 입력하세요', 'error');
         return;
     }
 
@@ -961,7 +961,7 @@ async function publishArticle() {
 
     try {
         document.getElementById('btn-publish').disabled = true;
-        document.getElementById('btn-publish').textContent = 'Publishing...';
+        document.getElementById('btn-publish').textContent = '발행 중...';
 
         // Check if file exists (for update vs create)
         let existingSha = editingSha;
@@ -993,15 +993,15 @@ async function publishArticle() {
             await updateIndexPage('add', filename, { number: numStr, title: title, date: date });
         }
 
-        toast('Published successfully!', 'success');
+        toast('발행 완료!', 'success');
         closeEditor();
         loadArticles();
 
     } catch (e) {
-        toast('Publish error: ' + e.message, 'error');
+        toast('발행 오류: ' + e.message, 'error');
     } finally {
         document.getElementById('btn-publish').disabled = false;
-        document.getElementById('btn-publish').textContent = 'Publish';
+        document.getElementById('btn-publish').textContent = '발행';
     }
 }
 
@@ -1110,7 +1110,7 @@ async function updateIndexPage(action, filename, articleInfo) {
         });
     } catch (e) {
         console.error('Index update error:', e);
-        toast('Warning: article ' + action + 'd but index.html update failed. Rebuild site to fix.', 'error');
+        toast('경고: 글은 ' + (action === 'add' ? '추가' : '삭제') + '되었으나 목록 업데이트에 실패했습니다.', 'error');
     }
 }
 
@@ -1119,11 +1119,11 @@ async function updateIndexPage(action, filename, articleInfo) {
 // ════════════════════════════════════════════
 function savePat() {
     const pat = document.getElementById('pat-input').value.trim();
-    if (!pat) { toast('Please enter a token', 'error'); return; }
+    if (!pat) { toast('토큰을 입력하세요', 'error'); return; }
     sessionStorage.setItem('tra_pat', pat);
     document.getElementById('pat-input').value = '';
     checkPat();
-    toast('Token saved for this session', 'success');
+    toast('토큰 저장 완료 (현재 세션)', 'success');
     loadOverview();
     loadArticles();
 }
@@ -1131,10 +1131,10 @@ function savePat() {
 function checkPat() {
     const el = document.getElementById('patStatus');
     if (getPat()) {
-        el.textContent = 'Active';
+        el.textContent = '활성';
         el.className = 'pat-status ok';
     } else {
-        el.textContent = 'Not Set';
+        el.textContent = '미설정';
         el.className = 'pat-status missing';
     }
 }
