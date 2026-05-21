@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
 <meta name="googlebot" content="noindex,nofollow">
-<title>GMA v2.6 — 그로스메자닌 1호 PEF 운영 sourcing 모델 (1pager)</title>
+<title>GMA v2.10 — 그로스메자닌 1호 PEF 운영 sourcing 모델 (1pager)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -249,14 +249,14 @@ table tbody tr.disabled td.sig{text-decoration:line-through;text-decoration-colo
           <span class="arrow">▶</span><span>줄글 설명 보기</span>
         </button>
       </div>
-      <h1 class="title">GMA<span class="ver">v2.6</span> — 그로스메자닌 운영 모델</h1>
-      <p class="subtitle">펀드 500억 · CB 10건 · 만기 3+2년 · 매월 후보 20사 자동 산출 · <b>만기상환 cutoff 적용 (풋옵션·손실 자동 배제)</b></p>
+      <h1 class="title">GMA<span class="ver">v2.10</span> — 그로스메자닌 운영 모델</h1>
+      <p class="subtitle">펀드 500억 · CB 10건 · 만기 3+2년 · 매월 후보 20사 자동 산출 · <b>매출·YoY = DW rcf M-1(2026-04 롤링) · OPM·EBITDA·int_cov = DART 공시 · RCS 자산일치율 검증</b></p>
     </div>
     <div class="meta">
-      <div>BUILD&nbsp;&nbsp;<strong>2026-05-13</strong></div>
+      <div>BUILD&nbsp;&nbsp;<strong>2026-05-21</strong></div>
       <div>ANCHOR&nbsp;<strong>2026-05-01</strong></div>
       <div>NEXT&nbsp;&nbsp;&nbsp;<strong>2026-06-02</strong></div>
-      <div class="badge">v2.5 → v2.6</div>
+      <div class="badge">v2.9 → v2.10</div>
     </div>
   </header>
 
@@ -280,8 +280,8 @@ table tbody tr.disabled td.sig{text-decoration:line-through;text-decoration-colo
       <span class="v">시설투자 사이클 후반</span>
     </div>
     <div class="thesis-cutoff">
-      <span class="k">🆕 v2.6 Cutoff</span>
-      <span class="v">m5 + m6 필수<br>풋옵션·손실 자동 배제</span>
+      <span class="k">🆕 v2.10 게이트</span>
+      <span class="v">rcf M-1 매출 + 2026 크로스(데드 감점) + <b>자산일치율&lt;50% 탈락</b> + 그로스본질(투자0+임직원&lt;15) + 자금여유(잔고/매출≥1.0) 탈락</span>
     </div>
   </section>
 
@@ -302,14 +302,16 @@ flowchart TD
   D["business_model 분류<br/>B2B · B2C · Hybrid"]
   G["본질 매칭<br/><b>107</b>사"]
   E["점수 산정<br/>0.50·F + 0.50·Bull10"]
+  R["RCS 자산일치 검증<br/>자산일치율 &lt;50% → 탈락"]
   F["Top-20"]
 
-  A -- "매출 100억+<br/>YoY 15%+<br/>runway 측정" --> B
+  A -- "DW rcf sales_in M-1<br/>(2026-04 롤링)<br/>매출 100억+ YoY 15%+" --> B
   B -- "Stage A · 6필터<br/>고위드+협동조합 제외<br/>매출 1.8천억 상한<br/>OPM -50%+ / 기저 flag<br/>IPO+M&A invstCd 제외" --> C
   C --> D
   D -- "Bull10 ≥ 6<br/>+ m5=1 AND m6=1<br/>(106사 자동 배제)" --> G
   G --> E
-  E --> F
+  E -- "자산일치율 검증<br/>10곳 탈락<br/>차순위 채움" --> R
+  R --> F
 
   classDef base fill:#ffffff,stroke:#1a4d8c,stroke-width:1.5px,color:#0a0a0a,font-family:Inter,font-size:11px
   classDef final fill:#1a4d8c,stroke:#0f2e5c,stroke-width:1.5px,color:#ffffff,font-family:Inter,font-size:12px,font-weight:600
@@ -319,6 +321,7 @@ flowchart TD
   class B,C pool
   class E base
   class G cutoff
+  class R cutoff
   class F final
   linkStyle default stroke:#71717a,stroke-width:1.2px,color:#3f3f46,font-size:11px
 </pre>
@@ -327,11 +330,11 @@ flowchart TD
         <div class="eq">score = 0.50 × F_signal + 0.50 × Bull10</div>
         <div style="margin-top:5px;color:var(--ink-2)">F · 재무 활성도 8 시그널 (z-score 가중평균)<br>Bull10 · 본질 4축 + 보강 룰 measure (∑/10)</div>
         <div class="cutoff">
-          <b>v2.6 Cutoff</b> · <b>Bull10 ≥ 6</b> AND <b>m5_ebitda_pos = 1</b> AND <b>m6_int_cover = 1</b><br>
-          → 풋옵션(EBITDA− or int_cov &lt; 1)·손실 카테고리 자동 배제
+          <b>v2.10 게이트</b> · <b>Bull10 ≥ 6</b> AND <b>m5=1</b> AND <b>m6=1</b> AND <b>자산일치율 ≥ 50%</b> AND <b>임직원 ≥ 15</b> AND <b>잔고/매출 &lt; 1.0</b><br>
+          → 풋옵션·손실 자동 배제 + 자산일치·그로스본질·자금여유 3게이트 추가
         </div>
       </div>
-      <p class="cap">출처 · gowid-prd DW · v2.6 SSOT 1:1 매핑 · 2026-05-13</p>
+      <p class="cap">출처 · gowid-prd DW · v2.10 SSOT 1:1 매핑 · 2026-05-21</p>
     </section>
 
     <section class="tbl-stack">
@@ -437,7 +440,7 @@ flowchart TD
             </tr>
           </tbody>
         </table>
-        <p class="cap">출처 · gowid-prd · IC = universe 268사 측정 · B2B/H 합계 1.00 · v2.5에서 F8 잔고 절대규모 제거 + F2 잔고/매출 비율 0.38 신설 · v2.6 동일 가중치 유지 · 2026-05-13</p>
+        <p class="cap">출처 · gowid-prd · IC = universe 268사 측정 · B2B/H 합계 1.00 · v2.5에서 F8 잔고 절대규모 제거 + F2 잔고/매출 비율 0.38 신설 · v2.10 동일 가중치 유지 · 2026-05-21</p>
       </div>
 
       <div class="panel">
@@ -493,14 +496,14 @@ flowchart TD
             </tr>
             <tr style="background:#fef9f9">
               <td class="idx" style="color:var(--sub);font-weight:700">m5</td>
-              <td class="sig">EBITDA 양수 <span class="tag req">v2.6 필수</span></td>
+              <td class="sig">EBITDA 양수 <span class="tag req">v2.10 필수</span></td>
               <td><span class="tag">Cash</span></td>
               <td class="src">OP + 감가상각비 &gt; 0 (실측)</td>
               <td class="src">dw_fact.financial_statement · 99.6% 매핑</td>
             </tr>
             <tr style="background:#fef9f9">
               <td class="idx" style="color:var(--sub);font-weight:700">m6</td>
-              <td class="sig">이자 안전 <span class="tag req">v2.6 필수</span></td>
+              <td class="sig">이자 안전 <span class="tag req">v2.10 필수</span></td>
               <td><span class="tag">Cover</span></td>
               <td class="src">EBITDA ÷ 이자비용 ≥ 1.0</td>
               <td class="src">dw_fact.financial_statement · 88.8% 매핑</td>
@@ -535,7 +538,7 @@ flowchart TD
             </tr>
           </tbody>
         </table>
-        <p class="cap">출처 · gowid-prd.dw_fact · m5·m6 = v2.6 필수 라인 (둘 다 통과해야 Top-20 진입) · m7 Core · m9·m10 보강 (KYI 룰 + RM 데이터) · 2026-05-13</p>
+        <p class="cap">출처 · gowid-prd.dw_fact · m5·m6 = v2.10 필수 라인 (둘 다 통과해야 Top-20 진입) · m7 Core · m9·m10 보강 (KYI 룰 + RM 데이터) · 2026-05-21</p>
       </div>
 
     </section>
@@ -546,7 +549,7 @@ flowchart TD
     <div class="panel">
       <div class="panel-h">
         <span class="h">Top-20 카테고리 분포 · 5가지 Exit 시나리오</span>
-        <span class="sub">Anchor 2026-05-01 · v2.6 cutoff 적용 결과</span>
+        <span class="sub">Anchor 2026-05-01 · v2.10 게이트 적용 결과</span>
       </div>
       <table class="cat-table">
         <colgroup>
@@ -562,7 +565,7 @@ flowchart TD
             <th>#</th>
             <th>Exit 시나리오</th>
             <th class="num">MOIC</th>
-            <th class="num">v2.6 후보</th>
+            <th class="num">v2.10 후보</th>
             <th class="num">펀드 Bull 목표</th>
             <th>해석</th>
           </tr>
@@ -572,17 +575,17 @@ flowchart TD
             <td class="idx">①</td>
             <td class="sig">상장 (IPO)</td>
             <td class="num">5.08x</td>
-            <td class="num v26">5건</td>
-            <td class="num bull">3건</td>
-            <td class="src">이그니스 · 메이크스타 · 코드잇 · 이공이공 · 피앤티링크 — pre-IPO 라벨 또는 IPO 가시성 +ML</td>
+            <td class="num v26">2건</td>
+            <td class="num bull">2건</td>
+            <td class="src">코드잇 · 메이크스타 — pre-IPO 라벨 또는 IPO 가시성 +ML</td>
           </tr>
           <tr>
             <td class="idx">②</td>
             <td class="sig">전환매각 (M&amp;A · Secondary)</td>
             <td class="num">2.38x</td>
-            <td class="num v26">8건</td>
-            <td class="num bull">5건</td>
-            <td class="src">미스터아빠 · 바리 · 더스윙 · 애즈위메이크 · 에프앤엘 · 더휴식 · 세컨드홈 · 미니게이트</td>
+            <td class="num v26">11건</td>
+            <td class="num bull">6건</td>
+            <td class="src">이공이공 · 바리 · 미스터아빠 · 더스윙 · FICC · 에프앤엘 · 미니게이트 · 파마브로스 · 어썸엔터테인먼트 · 더휴식 · 무무즈</td>
           </tr>
           <tr>
             <td class="idx">③</td>
@@ -590,7 +593,7 @@ flowchart TD
             <td class="num">1.16x</td>
             <td class="num v26">7건</td>
             <td class="num bull">1건</td>
-            <td class="src">늘품마루 · 엠리무진 · 로지스핏 · 위펀풀필먼트 · 하성푸드 · 디라이트 · 데일리리빙</td>
+            <td class="src">늘품마루 · 신세계바이오 · 세컨드홈 · 엠리무진 · 유닛커넥트 · 디무브 · 비에스바이오</td>
           </tr>
           <tr class="cat-row-zero">
             <td class="idx">④</td>
@@ -611,7 +614,7 @@ flowchart TD
         </tbody>
       </table>
       <div class="cat-foot">
-        <b>해석 ·</b> v2.6 Top-20 = <b>수익 자리 13건</b> (① 상장 5 + ② 전환매각 8) + <b>만기상환 7건</b>. 펀드 Bull 시나리오(IPO 3 + 전환매각 5) 도달 가능. KYI 룰 <i>"상장+전환매각으로 꽉 채워야지 만기·풋·손실은 사고"</i> 정합.
+        <b>해석 ·</b> v2.10 Top-20 = <b>수익 자리 13건</b> (① 상장 2 + ② 전환매각 11) + <b>만기상환 7건</b>. 펀드 Bull 시나리오(IPO 2 + 전환매각 6) 도달 가능. KYI 룰 <i>"상장+전환매각으로 꽉 채워야지 만기·풋·손실은 사고"</i> 정합. 자산일치율·그로스본질·자금여유 3게이트 신설로 sourcing 품질 강화.
       </div>
     </div>
   </section>
@@ -620,19 +623,21 @@ flowchart TD
   <section class="top20">
     <div class="panel">
       <div class="panel-h">
-        <span class="h">v2.6 Top-20 회사 명단</span>
-        <span class="sub">score 내림차순 · 전원 m5·m6 통과</span>
+        <span class="h">v2.10 Top-20 회사 명단</span>
+        <span class="sub">score 내림차순 · 전원 m5·m6 통과 · RCS 자산일치 검증</span>
       </div>
       <table>
         <colgroup>
           <col style="width:32px">
-          <col style="width:22%">
+          <col style="width:20%">
           <col style="width:60px">
-          <col style="width:80px">
+          <col style="width:76px">
+          <col style="width:58px">
+          <col style="width:50px">
           <col style="width:62px">
-          <col style="width:54px">
-          <col style="width:90px">
           <col style="width:74px">
+          <col style="width:64px">
+          <col style="width:52px">
           <col>
         </colgroup>
         <thead>
@@ -641,60 +646,72 @@ flowchart TD
             <th>회사</th>
             <th>biz</th>
             <th>status</th>
-            <th class="num">score</th>
-            <th class="num">Bull10</th>
-            <th class="num">EBITDA</th>
+            <th class="num">매출(억)</th>
+            <th class="num">YoY%</th>
+            <th class="num">OPM%</th>
+            <th class="num">EBITDA(억)</th>
             <th class="num">int_cov</th>
-            <th>Exit</th>
+            <th class="num">자산일치</th>
+            <th>Exit · 2026</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td class="idx">1</td><td class="corp"><span class="star">🌟</span>이그니스</td><td><span class="biz-b2c">B2C</span></td><td>pre-IPO<span class="ipo-mark">IPO</span></td><td class="num">0.81</td><td class="num">8</td><td class="num">+68.5억</td><td class="num">3.6x</td><td><span class="exit-1">① 상장</span></td></tr>
-          <tr><td class="idx">2</td><td class="corp">늘품마루</td><td><span class="biz-b2c">B2C</span></td><td>—</td><td class="num">0.77</td><td class="num">7</td><td class="num">+3.8억</td><td class="num">2.6x</td><td><span class="exit-3">③ 만기</span></td></tr>
-          <tr><td class="idx">3</td><td class="corp">미스터아빠</td><td><span class="biz-b2c">B2C</span></td><td>비공개</td><td class="num">0.75</td><td class="num">8</td><td class="num">+72.9억</td><td class="num">7.1x</td><td><span class="exit-2">② 전환</span></td></tr>
-          <tr><td class="idx">4</td><td class="corp">바리코퍼레이션</td><td><span class="biz-b2b">B2B</span></td><td>series B</td><td class="num">0.73</td><td class="num">8</td><td class="num">+13.1억</td><td class="num">10.6x</td><td><span class="exit-2">② 전환</span></td></tr>
-          <tr><td class="idx">5</td><td class="corp">이공이공</td><td><span class="biz-b2b">B2B</span></td><td>비공개</td><td class="num">0.73</td><td class="num">9</td><td class="num">+16.8억</td><td class="num">6.6x</td><td><span class="exit-2">② / ①</span></td></tr>
-          <tr><td class="idx">6</td><td class="corp">엠리무진</td><td><span class="biz-h">Hybrid</span></td><td>—</td><td class="num">0.68</td><td class="num">7</td><td class="num">+23.1억</td><td class="num">7.4x</td><td><span class="exit-3">③ 만기</span></td></tr>
-          <tr><td class="idx">7</td><td class="corp">로지스핏</td><td><span class="biz-h">Hybrid</span></td><td>—</td><td class="num">0.67</td><td class="num">7</td><td class="num">+12.5억</td><td class="num">121.6x</td><td><span class="exit-3">③ 만기</span></td></tr>
-          <tr><td class="idx">8</td><td class="corp">위펀풀필먼트</td><td><span class="biz-h">Hybrid</span></td><td>—</td><td class="num">0.65</td><td class="num">7</td><td class="num">+9.7억</td><td class="num">10.1x</td><td><span class="exit-3">③ 만기</span></td></tr>
-          <tr><td class="idx">9</td><td class="corp">메이크스타</td><td><span class="biz-b2b">B2B</span></td><td>series D</td><td class="num">0.60</td><td class="num">8</td><td class="num">+67.0억</td><td class="num">16.5x</td><td><span class="exit-1">① 상장</span></td></tr>
-          <tr><td class="idx">10</td><td class="corp">애즈위메이크</td><td><span class="biz-b2b">B2B</span></td><td>series C</td><td class="num">0.60</td><td class="num">8</td><td class="num">+80.8억</td><td class="num">85.1x</td><td><span class="exit-2">② 전환</span></td></tr>
-          <tr><td class="idx">11</td><td class="corp">더스윙</td><td><span class="biz-b2b">B2B</span></td><td>series B</td><td class="num">0.60</td><td class="num">8</td><td class="num">+39.9억</td><td class="num">1.2x</td><td><span class="exit-2">② 전환</span></td></tr>
-          <tr><td class="idx">12</td><td class="corp">하성푸드</td><td><span class="biz-h">Hybrid</span></td><td>—</td><td class="num">0.60</td><td class="num">7</td><td class="num">+6.7억</td><td class="num">62.8x</td><td><span class="exit-3">③ 만기</span></td></tr>
-          <tr><td class="idx">13</td><td class="corp">에프앤엘</td><td><span class="biz-h">Hybrid</span></td><td>비공개</td><td class="num">0.59</td><td class="num">7</td><td class="num">+72.0억</td><td class="num">34.9x</td><td><span class="exit-2">② 전환</span></td></tr>
-          <tr><td class="idx">14</td><td class="corp">미니게이트</td><td><span class="biz-b2c">B2C</span></td><td>비공개</td><td class="num">0.58</td><td class="num">8</td><td class="num">+21.6억</td><td class="num">3.5x</td><td><span class="exit-2">② 전환</span></td></tr>
-          <tr><td class="idx">15</td><td class="corp">피앤티링크</td><td><span class="biz-h">Hybrid</span></td><td>—</td><td class="num">0.57</td><td class="num">7</td><td class="num">+23.3억</td><td class="num">101.0x</td><td><span class="exit-1">① / ②</span></td></tr>
-          <tr><td class="idx">16</td><td class="corp"><span class="new-mark">NEW</span>세컨드홈</td><td><span class="biz-b2b">B2B</span></td><td>—</td><td class="num">0.57</td><td class="num">7</td><td class="num">+5.8억</td><td class="num">1.6x</td><td><span class="exit-2">② 전환</span></td></tr>
-          <tr><td class="idx">17</td><td class="corp"><span class="new-mark">NEW</span>더휴식</td><td><span class="biz-b2b">B2B</span></td><td>series B</td><td class="num">0.57</td><td class="num">7</td><td class="num">+48.4억</td><td class="num">3.5x</td><td><span class="exit-2">② 전환</span></td></tr>
-          <tr><td class="idx">18</td><td class="corp"><span class="new-mark">NEW</span>디라이트컴퍼니</td><td><span class="biz-b2c">B2C</span></td><td>—</td><td class="num">0.57</td><td class="num">7</td><td class="num">+4.9억</td><td class="num">7.6x</td><td><span class="exit-3">③ 만기</span></td></tr>
-          <tr><td class="idx">19</td><td class="corp"><span class="new-mark">NEW</span>데일리리빙</td><td><span class="biz-b2c">B2C</span></td><td>—</td><td class="num">0.56</td><td class="num">7</td><td class="num">+9.7억</td><td class="num">543x</td><td><span class="exit-3">③ 만기</span></td></tr>
-          <tr><td class="idx">20</td><td class="corp"><span class="new-mark">NEW</span><span class="star">🌟</span>코드잇</td><td><span class="biz-b2b">B2B</span></td><td>pre-IPO<span class="ipo-mark">IPO</span></td><td class="num">0.56</td><td class="num">7</td><td class="num">+58.9억</td><td class="num">26.2x</td><td><span class="exit-1">① 상장</span></td></tr>
+          <tr><td class="idx">1</td><td class="corp">이공이공</td><td><span class="biz-b2b">B2B</span></td><td>비공개</td><td class="num">813</td><td class="num">+127</td><td class="num">+3.6</td><td class="num">+16.8억</td><td class="num">6.6x</td><td class="num">91%</td><td><span class="exit-2">② 전환</span> <span style="font-size:10px;color:var(--pos);font-weight:600">골든</span></td></tr>
+          <tr><td class="idx">2</td><td class="corp">바리코퍼레이션</td><td><span class="biz-b2b">B2B</span></td><td>series B</td><td class="num">535</td><td class="num">+58</td><td class="num">+5.2</td><td class="num">+13.1억</td><td class="num">10.6x</td><td class="num">98%</td><td><span class="exit-2">② 전환</span> <span style="font-size:10px;color:var(--pos);font-weight:600">골든</span></td></tr>
+          <tr><td class="idx">3</td><td class="corp">미스터아빠</td><td><span class="biz-b2c">B2C</span></td><td>비공개</td><td class="num">1,050</td><td class="num">+69</td><td class="num">+4.2</td><td class="num">+72.9억</td><td class="num">7.1x</td><td class="num">99%</td><td><span class="exit-2">② 전환</span> <span style="font-size:10px;color:var(--sub);font-weight:600">데드</span></td></tr>
+          <tr><td class="idx">4</td><td class="corp">늘품마루</td><td><span class="biz-b2c">B2C</span></td><td>—</td><td class="num">985</td><td class="num">+118</td><td class="num">+0.3</td><td class="num">+3.8억</td><td class="num">2.6x</td><td class="num">99%</td><td><span class="exit-3">③ 만기</span> <span style="font-size:10px;color:var(--sub);font-weight:600">데드</span></td></tr>
+          <tr><td class="idx">5</td><td class="corp">더스윙</td><td><span class="biz-b2b">B2B</span></td><td>series B</td><td class="num">853</td><td class="num">+18</td><td class="num">+3.9</td><td class="num">+39.9억</td><td class="num">1.2x</td><td class="num">96%</td><td><span class="exit-2">② 전환</span> <span style="font-size:10px;color:var(--ink-2);font-weight:600">횡보</span></td></tr>
+          <tr><td class="idx">6</td><td class="corp">FICC(에프아이씨씨)</td><td><span class="biz-b2c">B2C</span></td><td>series B</td><td class="num">341</td><td class="num">+83</td><td class="num">+2.8</td><td class="num">+10.5억</td><td class="num">6.5x</td><td class="num">99%</td><td><span class="exit-2">② 전환</span> <span style="font-size:10px;color:var(--pos);font-weight:600">골든</span></td></tr>
+          <tr><td class="idx">7</td><td class="corp">신세계바이오</td><td><span class="biz-h">Hybrid</span></td><td>—</td><td class="num">635</td><td class="num">+229</td><td class="num">+6.3</td><td class="num">+23.0억</td><td class="num">66.4x</td><td class="num">57%</td><td><span class="exit-3">③ 만기</span> <span style="font-size:10px;color:var(--pos);font-weight:600">골든</span></td></tr>
+          <tr><td class="idx">8</td><td class="corp">세컨드홈</td><td><span class="biz-b2b">B2B</span></td><td>—</td><td class="num">422</td><td class="num">+30</td><td class="num">+1.6</td><td class="num">+5.8억</td><td class="num">1.6x</td><td class="num">88%</td><td><span class="exit-3">③ 만기</span> <span style="font-size:10px;color:var(--ink-2);font-weight:600">횡보</span></td></tr>
+          <tr><td class="idx">9</td><td class="corp">엠리무진</td><td><span class="biz-h">Hybrid</span></td><td>—</td><td class="num">699</td><td class="num">+44</td><td class="num">+4.0</td><td class="num">+23.1억</td><td class="num">7.4x</td><td class="num">96%</td><td><span class="exit-3">③ 만기</span> <span style="font-size:10px;color:var(--sub);font-weight:600">데드</span></td></tr>
+          <tr><td class="idx">10</td><td class="corp"><span class="star">🌟</span>코드잇</td><td><span class="biz-b2b">B2B</span></td><td>pre-IPO<span class="ipo-mark">IPO</span></td><td class="num">327</td><td class="num">+78</td><td class="num">+18.3</td><td class="num">+58.9억</td><td class="num">26.2x</td><td class="num">85%</td><td><span class="exit-1">① 상장</span> <span style="font-size:10px;color:var(--pos);font-weight:600">골든</span></td></tr>
+          <tr><td class="idx">11</td><td class="corp">메이크스타</td><td><span class="biz-b2b">B2B</span></td><td>series D</td><td class="num">1,134</td><td class="num">+23</td><td class="num">+4.8</td><td class="num">+67.0억</td><td class="num">16.5x</td><td class="num">89%</td><td><span class="exit-1">① 상장</span> <span style="font-size:10px;color:var(--sub);font-weight:600">데드</span></td></tr>
+          <tr><td class="idx">12</td><td class="corp">에프앤엘코퍼레이션</td><td><span class="biz-h">Hybrid</span></td><td>비공개</td><td class="num">574</td><td class="num">+33</td><td class="num">+9.7</td><td class="num">+72.0억</td><td class="num">34.9x</td><td class="num">93%</td><td><span class="exit-2">② 전환</span> <span style="font-size:10px;color:var(--ink-2);font-weight:600">횡보</span></td></tr>
+          <tr><td class="idx">13</td><td class="corp">미니게이트</td><td><span class="biz-b2c">B2C</span></td><td>비공개</td><td class="num">219</td><td class="num">+10</td><td class="num">+5.7</td><td class="num">+21.6억</td><td class="num">3.5x</td><td class="num">94%</td><td><span class="exit-2">② 전환</span> <span style="font-size:10px;color:var(--pos);font-weight:600">골든</span></td></tr>
+          <tr><td class="idx">14</td><td class="corp">파마브로스</td><td><span class="biz-b2b">B2B</span></td><td>비공개</td><td class="num">378</td><td class="num">+49</td><td class="num">+5.6</td><td class="num">+19.2억</td><td class="num">125.2x</td><td class="num">98%</td><td><span class="exit-2">② 전환</span> <span style="font-size:10px;color:var(--pos);font-weight:600">골든</span></td></tr>
+          <tr><td class="idx">15</td><td class="corp">유닛커넥트</td><td><span class="biz-h">Hybrid</span></td><td>—</td><td class="num">201</td><td class="num">+71</td><td class="num">+8.3</td><td class="num">+13.7억</td><td class="num">90.7x</td><td class="num">99%</td><td><span class="exit-3">③ 만기</span> <span style="font-size:10px;color:var(--pos);font-weight:600">골든</span></td></tr>
+          <tr><td class="idx">16</td><td class="corp">디무브</td><td><span class="biz-b2b">B2B</span></td><td>—</td><td class="num">152</td><td class="num">+52</td><td class="num">+6.4</td><td class="num">+10.4억</td><td class="num">861x</td><td class="num">71%</td><td><span class="exit-3">③ 만기</span> <span style="font-size:10px;color:var(--pos);font-weight:600">골든</span></td></tr>
+          <tr><td class="idx">17</td><td class="corp">비에스바이오</td><td><span class="biz-b2c">B2C</span></td><td>—</td><td class="num">113</td><td class="num">+200</td><td class="num">+5.4</td><td class="num">+2.2억</td><td class="num">15.0x</td><td class="num">56%</td><td><span class="exit-3">③ 만기</span> <span style="font-size:10px;color:var(--pos);font-weight:600">골든</span></td></tr>
+          <tr><td class="idx">18</td><td class="corp">어썸엔터테인먼트</td><td><span class="biz-b2b">B2B</span></td><td>비공개</td><td class="num">150</td><td class="num">+34</td><td class="num">+18.1</td><td class="num">+26.5억</td><td class="num">19.2x</td><td class="num">52%</td><td><span class="exit-2">② 전환</span> <span style="font-size:10px;color:var(--pos);font-weight:600">골든</span></td></tr>
+          <tr><td class="idx">19</td><td class="corp">더휴식</td><td><span class="biz-b2b">B2B</span></td><td>series B</td><td class="num">651</td><td class="num">+14</td><td class="num">+7.3</td><td class="num">+48.4억</td><td class="num">3.5x</td><td class="num">75%</td><td><span class="exit-2">② 전환</span> <span style="font-size:10px;color:var(--ink-2);font-weight:600">횡보</span></td></tr>
+          <tr><td class="idx">20</td><td class="corp">무무즈</td><td><span class="biz-b2c">B2C</span></td><td>series B</td><td class="num">175</td><td class="num">+33</td><td class="num">+1.7</td><td class="num">+3.0억</td><td class="num">3.7x</td><td class="num">50%</td><td><span class="exit-2">② 전환</span> <span style="font-size:10px;color:var(--ink-2);font-weight:600">횡보</span></td></tr>
         </tbody>
       </table>
-      <p class="cap">출처 · gma_v26_top20.csv · Top-20 전원 m5=1 (EBITDA+) AND m6=1 (int_cov ≥1.0) · 🌟 = pre-IPO 라벨 · NEW = v2.5 → v2.6 신규 진입 · 2026-05-13</p>
+      <p class="cap">출처 · gma_v2.10_top20.csv · 매출·YoY = DW rcf M-1(2026-04 롤링) · OPM·EBITDA·int_cov = DART 공시 · 자산일치율 = RCS 검증 · 🌟 = pre-IPO 라벨 · 골든/횡보/데드 = 2026 크로스 판정 · 2026-05-21</p>
     </div>
   </section>
 
-  <!-- ============ DIFF v2.5 → v2.6 ============ -->
+  <!-- ============ DIFF v2.9 → v2.10 ============ -->
   <section class="diff">
     <div class="diff-panel out">
-      <div class="h"><span>v2.5 → v2.6 빠짐</span><span class="cnt">5건 · cutoff 자동 배제</span></div>
+      <div class="h"><span>v2.9 → v2.10 탈락</span><span class="cnt">10건 · 3개 게이트</span></div>
       <div class="diff-list">
-        <div class="item"><span class="corp">콜로세움 <span class="badge-exit badge-out">④ 풋</span></span><span class="reason">EBITDA −42억 / int_cov −1.6x</span></div>
-        <div class="item"><span class="corp">딜리버리랩 <span class="badge-exit badge-out">④ 풋</span></span><span class="reason">EBITDA −22억 / int_cov −9.5x</span></div>
-        <div class="item"><span class="corp">넥스트미디어그룹 <span class="badge-exit badge-out">④ 풋</span></span><span class="reason">int_cov 0.5x</span></div>
-        <div class="item"><span class="corp">엔라이튼 <span class="badge-exit badge-out">④ 풋</span></span><span class="reason">int_cov 0.3x</span></div>
-        <div class="item"><span class="corp">포스타입 <span class="badge-exit badge-out">보수</span></span><span class="reason">이자비용 NaN → 보수 배제</span></div>
+        <div class="item"><span class="corp">스위트스팟 <span class="badge-exit badge-out">자산일치</span></span><span class="reason">자산일치율 45%</span></div>
+        <div class="item"><span class="corp">소도몰 <span class="badge-exit badge-out">자산일치</span></span><span class="reason">자산일치율 8%</span></div>
+        <div class="item"><span class="corp">플랜잇 <span class="badge-exit badge-out">자산일치</span></span><span class="reason">자산일치율 2.5%</span></div>
+        <div class="item"><span class="corp">유에이치씨 <span class="badge-exit badge-out">자산일치</span></span><span class="reason">자산일치율 4%</span></div>
+        <div class="item"><span class="corp">비비드카 <span class="badge-exit badge-out">그로스본질</span></span><span class="reason">임직원 10명</span></div>
+        <div class="item"><span class="corp">하성푸드 <span class="badge-exit badge-out">그로스본질</span></span><span class="reason">임직원 1명</span></div>
+        <div class="item"><span class="corp">에타솔라 <span class="badge-exit badge-out">그로스본질</span></span><span class="reason">임직원 1명</span></div>
+        <div class="item"><span class="corp">디라이트 <span class="badge-exit badge-out">그로스본질</span></span><span class="reason">임직원 9명</span></div>
+        <div class="item"><span class="corp">피앤티링크 <span class="badge-exit badge-out">자금여유</span></span><span class="reason">잔고/매출 ≥ 1.0</span></div>
+        <div class="item"><span class="corp">두오모 <span class="badge-exit badge-out">자금여유</span></span><span class="reason">잔고/매출 ≥ 1.0</span></div>
       </div>
     </div>
     <div class="diff-panel in">
-      <div class="h"><span>v2.5 → v2.6 신규</span><span class="cnt">5건 · 수익 자리 진입</span></div>
+      <div class="h"><span>v2.9 → v2.10 신규</span><span class="cnt">10건 · 차순위 채움</span></div>
       <div class="diff-list">
-        <div class="item"><span class="corp">🌟 코드잇 <span class="badge-exit badge-in">① 상장</span></span><span class="reason">pre-IPO · EBITDA +58.9억 / int_cov 26.2x</span></div>
-        <div class="item"><span class="corp">더휴식 <span class="badge-exit badge-in">② 전환</span></span><span class="reason">series B · EBITDA +48.4억</span></div>
-        <div class="item"><span class="corp">세컨드홈 <span class="badge-exit badge-in">② 전환</span></span><span class="reason">EBITDA +5.8억 / int_cov 1.6x</span></div>
-        <div class="item"><span class="corp">디라이트컴퍼니 <span class="badge-exit badge-in">③ 만기</span></span><span class="reason">EBITDA +4.9억 / int_cov 7.6x</span></div>
-        <div class="item"><span class="corp">데일리리빙 <span class="badge-exit badge-in">③ 만기</span></span><span class="reason">EBITDA +9.7억 / 무차입 543x</span></div>
+        <div class="item"><span class="corp">이공이공 <span class="badge-exit badge-in">② 전환</span></span><span class="reason">YoY +127% · EBITDA +16.8억</span></div>
+        <div class="item"><span class="corp">바리코퍼레이션 <span class="badge-exit badge-in">② 전환</span></span><span class="reason">series B · 자산일치 98%</span></div>
+        <div class="item"><span class="corp">FICC(에프아이씨씨) <span class="badge-exit badge-in">② 전환</span></span><span class="reason">YoY +83% · 자산일치 99%</span></div>
+        <div class="item"><span class="corp">에프앤엘코퍼레이션 <span class="badge-exit badge-in">② 전환</span></span><span class="reason">OPM +9.7% · EBITDA +72.0억</span></div>
+        <div class="item"><span class="corp">파마브로스 <span class="badge-exit badge-in">② 전환</span></span><span class="reason">int_cov 125.2x · 자산일치 98%</span></div>
+        <div class="item"><span class="corp">유닛커넥트 <span class="badge-exit badge-in">③ 만기</span></span><span class="reason">int_cov 90.7x · YoY +71%</span></div>
+        <div class="item"><span class="corp">디무브 <span class="badge-exit badge-in">③ 만기</span></span><span class="reason">int_cov 861x · OPM +6.4%</span></div>
+        <div class="item"><span class="corp">비에스바이오 <span class="badge-exit badge-in">③ 만기</span></span><span class="reason">YoY +200%</span></div>
+        <div class="item"><span class="corp">어썸엔터테인먼트 <span class="badge-exit badge-in">② 전환</span></span><span class="reason">OPM +18.1% · EBITDA +26.5억</span></div>
+        <div class="item"><span class="corp">무무즈 <span class="badge-exit badge-in">② 전환</span></span><span class="reason">series B · EBITDA +3.0억</span></div>
       </div>
     </div>
   </section>
@@ -703,13 +720,13 @@ flowchart TD
   <section class="sim">
     <div class="sim-lbl">
       <span>펀드 10건<br>구성 시뮬</span>
-      <span class="sub">v2.6 후보 20 → DD 50% → 10건</span>
+      <span class="sub">v2.10 후보 20 → DD 50% → 10건</span>
     </div>
     <div class="sim-body">
       <div class="sim-stack">
-        <div class="line"><span class="cat">① 상장</span><span class="corp-list">이그니스 · 메이크스타 · 코드잇</span><span class="v">3 / 5건</span></div>
-        <div class="line"><span class="cat">② 전환매각</span><span class="corp-list">미스터아빠 · 바리 · 더스윙 · 애즈위메이크 · 에프앤엘</span><span class="v">5 / 8건</span></div>
-        <div class="line"><span class="cat">③ 만기상환</span><span class="corp-list">7건 중 1~2건 충원 (Reserve · 수익 자리 미달 시 backfill)</span><span class="v">1~2 / 7건</span></div>
+        <div class="line"><span class="cat">① 상장</span><span class="corp-list">코드잇 · 메이크스타</span><span class="v">2 / 2건</span></div>
+        <div class="line"><span class="cat">② 전환매각</span><span class="corp-list">이공이공 · 바리 · 미스터아빠 · 더스윙 · FICC · 에프앤엘 · 미니게이트 · 파마브로스</span><span class="v">6~8 / 11건</span></div>
+        <div class="line"><span class="cat">③ 만기상환</span><span class="corp-list">7건 중 0~2건 충원 (Reserve · 수익 자리 우선)</span><span class="v">0~2 / 7건</span></div>
         <div class="line"><span class="cat" style="color:var(--pos);font-weight:600">④ 풋옵션</span><span class="corp-list" style="color:var(--pos)">자동 배제 ✅</span><span class="v" style="color:var(--pos)">0건</span></div>
         <div class="line"><span class="cat" style="color:var(--pos);font-weight:600">⑤ 손실</span><span class="corp-list" style="color:var(--pos)">자동 배제 ✅</span><span class="v" style="color:var(--pos)">0건</span></div>
       </div>
@@ -770,7 +787,7 @@ flowchart TD
             <td class="name">dw_fact.financial_statement</td>
             <td>F7 · <b style="color:var(--sub)">m5 · m6 (필수)</b></td>
             <td class="num">267 / 268 &nbsp;(99.6%)<br>237 / 268 &nbsp;(88.8%)</td>
-            <td class="role">결산 재무제표 — OP · D&amp;A · 이자비용 PIT-safe · <b>v2.6 필수 cutoff</b></td>
+            <td class="role">결산 재무제표 — OP · D&amp;A · 이자비용 PIT-safe · <b>v2.10 필수 cutoff</b></td>
             <td class="cost">1.4 MB · 0 원</td>
           </tr>
           <tr>
@@ -789,7 +806,7 @@ flowchart TD
           </tr>
         </tbody>
       </table>
-      <p class="cap">출처 · gowid-prd · 매월 BQ 호출 3종 · 비용 ≈ 25 원/월 · 실행시간 1분 이내 · v2.6 cutoff 강화 (m5·m6 필수) · 2026-05-13</p>
+      <p class="cap">출처 · gowid-prd · 매월 BQ 호출 3종 · 비용 ≈ 25 원/월 · 실행시간 1분 이내 · v2.10 게이트 강화 (자산일치율·그로스본질·자금여유) · 2026-05-21</p>
     </div>
   </section>
 
@@ -800,7 +817,7 @@ flowchart TD
       <ol>
         <li><b>재무제표 lag를 실시간 거래 데이터로 메운다.</b> 매출 YoY는 <b>1개월 전 통장 inflow</b>, 잔고는 <b>어제까지 일별 잔고</b>, 거래처 분산은 <b>국세청 세금계산서 distinct count</b> — DART 공시 알파 0의 영역. 고위드만 보는 데이터.</li>
         <li><b>본질 4축 + 보강 룰을 proxy 아닌 직접 측정한다.</b> EBITDA = <b>OP + D&amp;A 실측</b>, 이자 커버 = EBITDA ÷ 이자비용, CAPEX 사이클 = 24M 시계열, PD = ML risk_grade, 메자닌 니즈 = 잔고 ÷ 월매출 — 회계 적자와 현금 적자를 코드로 분리.</li>
-        <li><b>🆕 v2.6 만기상환 cutoff로 풋옵션·손실을 자동 배제한다.</b> Bull10 ≥ 6 만으로는 EBITDA− 또는 이자커버&lt;1 회사가 점수 상위에 진입 가능. <b>m5·m6 필수 조건</b>을 cutoff에 추가하면 풋옵션(MOIC 1.14x) · 손실(0.38x) 카테고리 회사가 진입 자격 단계에서 자동 차단된다. KYI 룰 <i>"상장+전환매각으로 꽉 채워야지 만기·풋·손실은 사고"</i> 정합.</li>
+        <li><b>🆕 v2.10 3게이트로 sourcing 품질을 강화한다.</b> 자산일치율 &lt;50% 탈락(RCS 검증), 그로스본질(투자0+임직원&lt;15) 탈락, 자금여유(잔고/매출≥1.0) 탈락 — 3게이트가 v2.6 m5·m6 cutoff에 더해져 실질 투자 부적격 10곳을 추가 배제하고 차순위로 채운다.</li>
       </ol>
     </div>
   </section>
@@ -840,7 +857,7 @@ flowchart TD
       <div class="term"><span class="k">YoY</span><span class="v">Year-over-Year · 전년 동기 대비 증감률</span></div>
       <div class="term"><span class="k">PIT-safe</span><span class="v">Point-In-Time safe · 과거 시점 기준 데이터 무결성 보존</span></div>
       <div class="term"><span class="k">anchor</span><span class="v">측정 기준 시점 · 매월 첫 영업일 (예: 2026-05-01)</span></div>
-      <div class="term"><span class="k">cutoff</span><span class="v">임계값 · v2.6은 Bull10 ≥ 6 AND m5=1 AND m6=1 미만 자동 배제</span></div>
+      <div class="term"><span class="k">cutoff</span><span class="v">임계값 · v2.10은 Bull10 ≥ 6 AND m5=1 AND m6=1 AND 자산일치율≥50% AND 임직원≥15 AND 잔고/매출&lt;1.0</span></div>
       <div class="term"><span class="k">N M</span><span class="v">N개월 (예: 12M = 12개월, 24M = 24개월 시계열)</span></div>
       <div class="term"><span class="k">N억</span><span class="v">원화 N억원 (예: 50억 = 50억원, 1,800억 = 1,800억원)</span></div>
       <div class="term"><span class="k">PEF</span><span class="v">Private Equity Fund · 사모투자펀드</span></div>
@@ -852,18 +869,18 @@ flowchart TD
       <div class="term"><span class="k">B2B · B2C</span><span class="v">Business-to-Business · Business-to-Consumer (+ Hybrid)</span></div>
       <div class="term"><span class="k">F 시그널</span><span class="v">Financial signal · 재무 활성도 8 시그널 (F1~F8, F8 제거)</span></div>
       <div class="term"><span class="k">Bull10</span><span class="v">본질 4축 + 보강 룰 10 measure (m1~m10) · 0/1 이진</span></div>
-      <div class="term"><span class="k">Core / 필수</span><span class="v">m5·m6 = v2.6 필수 (cutoff 가산 → 통과 자격) · m7 = Core (가산)</span></div>
+      <div class="term"><span class="k">Core / 필수</span><span class="v">m5·m6 = v2.10 필수 (cutoff 가산 → 통과 자격) · m7 = Core (가산)</span></div>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer class="foot">
     <div class="l">
-      <span>GMA v2.6 · 그로스메자닌 1호 PEF Sourcing</span>
+      <span>GMA v2.10 · 그로스메자닌 1호 PEF Sourcing</span>
       <span>당사 GP · 매월 첫 영업일 자동 산출 · BQ 25 원 · 1분</span>
-      <span>만기상환 cutoff · 풋옵션·손실 자동 배제</span>
+      <span>자산일치율·그로스본질·자금여유 3게이트 · RCS 검증</span>
     </div>
-    <div>INTERNAL USE · 2026-05-13</div>
+    <div>INTERNAL USE · 2026-05-21</div>
   </footer>
 
 </div>
@@ -873,14 +890,14 @@ flowchart TD
   <div class="modal-bg" data-close></div>
   <article class="modal-body">
     <header class="modal-head">
-      <h2 id="modal-title">GMA<span class="ver">v2.6</span> — 줄글 설명</h2>
+      <h2 id="modal-title">GMA<span class="ver">v2.10</span> — 줄글 설명</h2>
       <button class="modal-close" type="button" data-close aria-label="닫기">×</button>
     </header>
     <div class="modal-content">
-      <p class="lead">저희 1호 펀드 sourcing은 매월 첫 영업일에 같은 룰로 후보 회사 20개를 자동 산출합니다. 펀드 구조는 500억 규모 10건, 만기 3+2년, CB 위주, 시설투자형 자금도 허용입니다. v2.6은 v2.5 산출 모델 위에 <b>만기상환 cutoff</b>를 추가해, 풋옵션·손실 카테고리 회사가 Top-20에 진입할 자격을 산출 단계에서 자동 박탈합니다.</p>
+      <p class="lead">저희 1호 펀드 sourcing은 매월 첫 영업일에 같은 룰로 후보 회사 20개를 자동 산출합니다. 펀드 구조는 500억 규모 10건, 만기 3+2년, CB 위주, 시설투자형 자금도 허용입니다. v2.10은 v2.6 모델 위에 <b>3게이트(자산일치율·그로스본질·자금여유)</b>를 추가해, RCS 자산일치율 &lt;50%·임직원 &lt;15명·잔고/매출 ≥1.0 회사를 자동 탈락시키고 차순위로 채웁니다. 매출·YoY는 DW rcf M-1(2026-04 롤링), OPM·EBITDA·int_cov는 DART 공시 기준입니다.</p>
 
       <div class="cutoff-box">
-        <b>v2.6 핵심 변경 · 만기상환 cutoff.</b> Bull10 cutoff에 두 조건을 추가합니다. <b>m5 EBITDA 양수 = 1</b> AND <b>m6 이자 안전 = 1</b> 둘 다 통과해야 Top-20 정렬 대상에 포함됩니다. v2.5는 Bull10 ≥ 6 단일 cutoff로 129사를 후보 풀로 사용했고, 그 중 m5·m6 미통과 회사 5건이 Top-20에 진입했습니다 (콜로세움 EBITDA −42억 · 딜리버리랩 EBITDA −22억 · 넥스트미디어그룹 int_cov 0.5x · 엔라이튼 0.3x · 포스타입 이자비용 NaN). v2.6은 이 5건을 자격 단계에서 제외하고 후보 풀을 <b>107사</b>로 좁힙니다. 빠진 자리에 EBITDA+ · int_cov+ 통과 회사 5건이 진입합니다 (🌟코드잇 EBITDA +58.9억 · 더휴식 +48.4억 · 세컨드홈 +5.8억 · 디라이트 +4.9억 · 데일리리빙 +9.7억).
+        <b>v2.10 핵심 변경 · 3게이트 신설.</b> v2.6 m5·m6 필수 cutoff(풋옵션·손실 배제) 위에 3개 게이트를 추가합니다. ① <b>자산일치율 &lt;50% 탈락</b> — RCS 검증으로 스위트스팟(45%)·소도몰(8%)·플랜잇(2.5%)·유에이치씨(4%) 4곳 배제. ② <b>그로스본질(투자0+임직원&lt;15) 탈락</b> — 비비드카(10명)·하성푸드(1명)·에타솔라(1명)·디라이트(9명) 4곳 배제. ③ <b>자금여유(잔고/매출≥1.0) 탈락</b> — 피앤티링크·두오모 2곳 배제. 탈락 10곳 자리는 차순위 후보로 채워 최종 20곳을 확정합니다.
       </div>
 
       <h3>왜 m5·m6를 필수 cutoff로 올렸는가</h3>
